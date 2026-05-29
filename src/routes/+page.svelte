@@ -173,7 +173,7 @@
     <div class="max-w-7xl mx-auto space-y-8">
         
         <header class="text-center space-y-4 pt-4">
-            <h1 class="text-5xl font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-500 to-indigo-600">
+            <h1 class="text-5xl font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-red-400 via-red-500 to-red-600">
                 Forza Horizon 6 Randomiser
             </h1>
             <p class="text-neutral-400 text-lg">Generate your ultimate event constraints.</p>
@@ -202,7 +202,7 @@
                                 max="10" 
                                 value={$settingsStore.outputCount}
                                 onchange={changeOutputCount}
-                                class="bg-neutral-800 text-white w-16 px-2 py-1 rounded border border-neutral-700 text-center focus:outline-none focus:border-blue-500 transition-colors"
+                                class="bg-neutral-800 text-white w-16 px-2 py-1 rounded border border-neutral-700 text-center focus:outline-none focus:border-red-500 transition-colors"
                             />
                         </div>
 
@@ -212,7 +212,7 @@
                                 {#each CATEGORIES as cat}
                                     {@const isActive = $settingsStore.activeCategories.includes(cat.id)}
                                     <button 
-                                        class="px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 border {isActive ? 'bg-blue-500/20 border-blue-500/50 text-blue-400' : 'bg-neutral-950 border-neutral-800 text-neutral-500 hover:border-neutral-600 hover:text-neutral-300'}"
+                                        class="px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 border {isActive ? 'bg-red-500/20 border-red-500/50 text-red-400' : 'bg-neutral-950 border-neutral-800 text-neutral-500 hover:border-neutral-600 hover:text-neutral-300'}"
                                         onclick={() => toggleCategory(cat.id)}
                                     >
                                         {cat.label}
@@ -228,7 +228,7 @@
                     
                     <div class="flex justify-center items-center bg-neutral-900 p-6 rounded-3xl border border-neutral-800 shadow-xl">
                         <button 
-                            class="w-full md:w-auto px-12 py-5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold rounded-2xl shadow-lg transition-transform active:scale-95 text-2xl"
+                            class="w-full md:w-auto px-12 py-5 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white font-bold rounded-2xl shadow-lg transition-transform active:scale-95 text-2xl"
                             onclick={() => roll()}
                         >
                             Roll Constraints
@@ -237,14 +237,14 @@
 
                     {#if results.length > 0}
                         <div class="bg-neutral-900 p-6 md:p-8 rounded-3xl border border-neutral-800 shadow-2xl relative overflow-hidden">
-                            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-cyan-400 via-blue-500 to-indigo-600"></div>
+                            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-red-400 via-red-500 to-red-600"></div>
                             
                             <div class="flex justify-between items-center mb-8 border-b border-neutral-800 pb-4">
                                 <h3 class="text-2xl font-bold text-white">Your Event</h3>
                                 <div class="text-neutral-500 text-sm flex items-center gap-3">
                                     <span>Seed: <code class="bg-neutral-950 px-2 py-1 rounded text-neutral-300 font-mono">{currentSeed}</code></span>
                                     <button 
-                                        class="text-blue-400 hover:text-blue-300 transition-colors p-2 bg-blue-500/10 rounded-lg"
+                                        class="text-red-400 hover:text-red-300 transition-colors p-2 bg-red-500/10 rounded-lg"
                                         title="Copy Link"
                                         onclick={(e) => {
                                             navigator.clipboard.writeText(window.location.href);
@@ -283,7 +283,7 @@
 
         <footer class="text-center pt-12 pb-4 text-neutral-500 text-sm space-y-2">
             <div>
-                Car Data thanks to <a href="https://docs.google.com/spreadsheets/d/1pz_hNeBiBwLn-ya1zLRhzvnaYk3lLfg9izmbCI82mW4/" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:text-blue-300 transition-colors">Aeqnx and their Spreadsheet</a>.
+                Car Data thanks to <a href="https://docs.google.com/spreadsheets/d/1pz_hNeBiBwLn-ya1zLRhzvnaYk3lLfg9izmbCI82mW4/" target="_blank" rel="noopener noreferrer" class="text-red-400 hover:text-red-300 transition-colors">Aeqnx and their Spreadsheet</a>.
             </div>
             <div>
                 Data Date: 2026-05-30
