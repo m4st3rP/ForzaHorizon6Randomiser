@@ -279,15 +279,15 @@
                     {/if}
                 </div>
             </div>
-        {/if} space-y-2">
+        {/if}
+
+        <footer class="text-center pt-12 pb-4 text-neutral-500 text-sm space-y-2">
             <div>
                 Car Data thanks to <a href="https://docs.google.com/spreadsheets/d/1pz_hNeBiBwLn-ya1zLRhzvnaYk3lLfg9izmbCI82mW4/" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:text-blue-300 transition-colors">Aeqnx and their Spreadsheet</a>.
             </div>
             <div>
                 Data Date: 2026-05-30
             </div>
-        <footer class="text-center pt-12 pb-4 text-neutral-500 text-sm">
-            Car Data thanks to <a href="https://docs.google.com/spreadsheets/d/1pz_hNeBiBwLn-ya1zLRhzvnaYk3lLfg9izmbCI82mW4/" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:text-blue-300 transition-colors">Aeqnx and their Spreadsheet</a>.
         </footer>
     </div>
 </div>
