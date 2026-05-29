@@ -206,7 +206,16 @@
                         </div>
 
                         <div>
-                            <h3 class="font-semibold text-neutral-400 mb-3 text-sm uppercase tracking-wider">Active Categories</h3>
+                            <div class="flex items-center justify-between mb-3">
+                                <h3 class="font-semibold text-neutral-400 text-sm uppercase tracking-wider mb-0">Active Categories</h3>
+                                <button 
+                                    class="text-xs px-2 py-1 rounded border border-neutral-700 bg-neutral-900 text-neutral-400 hover:text-red-400 hover:border-red-500/50 transition-colors"
+                                    onclick={() => { settingsStore.update(s => ({ ...s, activeCategories: ['car_class', 'car_type', 'tracktype', 'season', 'time_of_day', 'weather'] })); }}
+                                    title="Reset to default categories"
+                                >
+                                    Reset
+                                </button>
+                            </div>
                             <div class="flex flex-wrap gap-2">
                                 {#each CATEGORIES as cat}
                                     {@const isActive = $settingsStore.activeCategories.includes(cat.id)}
