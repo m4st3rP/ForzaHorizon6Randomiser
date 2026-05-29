@@ -176,7 +176,6 @@
             <h1 class="text-5xl font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-red-400 via-red-500 to-red-600">
                 Forza Horizon 6 Randomiser
             </h1>
-            <p class="text-neutral-400 text-lg">Generate your ultimate event constraints.</p>
         </header>
 
         {#if loading}
@@ -231,7 +230,7 @@
                             class="w-full md:w-auto px-12 py-5 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white font-bold rounded-2xl shadow-lg transition-transform active:scale-95 text-2xl"
                             onclick={() => roll()}
                         >
-                            Roll Constraints
+                            Roll
                         </button>
                     </div>
 
