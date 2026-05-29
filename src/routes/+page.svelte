@@ -74,7 +74,7 @@
             // Initialize store if empty
             if (!$settingsStore.activeCategories || $settingsStore.activeCategories.length === 0) {
                 // Enable some typical defaults
-                $settingsStore.activeCategories = ['car_class', 'car_type', 'tracktype', 'season', 'weather'];
+                $settingsStore.activeCategories = ['car_class', 'car_type', 'tracktype', 'season', 'time_of_day', 'weather'];
             }
 
             loading = false;
@@ -85,6 +85,8 @@
             if (seedParam) {
                 currentSeed = seedParam;
                 roll(currentSeed);
+            } else {
+                roll();
             }
         } catch (err) {
             console.error('Data load error:', err);
@@ -277,8 +279,13 @@
                     {/if}
                 </div>
             </div>
-        {/if}
-
+        {/if} space-y-2">
+            <div>
+                Car Data thanks to <a href="https://docs.google.com/spreadsheets/d/1pz_hNeBiBwLn-ya1zLRhzvnaYk3lLfg9izmbCI82mW4/" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:text-blue-300 transition-colors">Aeqnx and their Spreadsheet</a>.
+            </div>
+            <div>
+                Data Date: 2026-05-30
+            </div>
         <footer class="text-center pt-12 pb-4 text-neutral-500 text-sm">
             Car Data thanks to <a href="https://docs.google.com/spreadsheets/d/1pz_hNeBiBwLn-ya1zLRhzvnaYk3lLfg9izmbCI82mW4/" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:text-blue-300 transition-colors">Aeqnx and their Spreadsheet</a>.
         </footer>
