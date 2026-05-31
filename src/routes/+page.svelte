@@ -62,7 +62,10 @@
                 return a.localeCompare(b);
             });
 
-            dynamicOptions['specific_car'] = cars.map(c => c['Car Name']);
+            dynamicOptions['specific_car'] = cars.map(c => {
+                const acquired = c['Acquired via'] ? c['Acquired via'].trim() : '';
+                return acquired ? `${c['Car Name']}||Acquired via: ${acquired}` : c['Car Name'];
+            });
             dynamicOptions['track'] = races.map(r => r.Name);
             dynamicOptions['tracktype'] = [...new Set(races.map(r => r.Type).filter(Boolean))].sort();
             dynamicOptions['track_subtype'] = [...new Set(races.map(r => r.Subtype).filter(Boolean))].sort();
@@ -312,7 +315,15 @@
                                             <div class="text-xs font-bold text-neutral-500 uppercase tracking-wider mb-2">{catResult.label}</div>
                                             <div class="space-y-1">
                                                 {#each catResult.results as res}
-                                                    <div class="text-xl md:text-2xl font-semibold text-neutral-100">{res}</div>
+                                                    <div class="text-xl md:text-2xl font-semibold text-neutral-100">
+                                                        {#if res.includes('||')}
+                                                            {@const parts = res.split('||')}
+                                                            {parts[0]}
+                                                            <span class="block text-sm md:text-base font-normal text-neutral-400 mt-1">{parts[1]}</span>
+                                                        {:else}
+                                                            {res}
+                                                        {/if}
+                                                    </div>
                                                 {/each}
                                             </div>
                                         </div>
@@ -332,7 +343,15 @@
                                             <div class="text-xs font-bold text-neutral-500 uppercase tracking-wider mb-2">{catResult.label}</div>
                                             <div class="space-y-1">
                                                 {#each catResult.results as res}
-                                                    <div class="text-xl md:text-2xl font-semibold text-neutral-100">{res}</div>
+                                                    <div class="text-xl md:text-2xl font-semibold text-neutral-100">
+                                                        {#if res.includes('||')}
+                                                            {@const parts = res.split('||')}
+                                                            {parts[0]}
+                                                            <span class="block text-sm md:text-base font-normal text-neutral-400 mt-1">{parts[1]}</span>
+                                                        {:else}
+                                                            {res}
+                                                        {/if}
+                                                    </div>
                                                 {/each}
                                             </div>
                                         </div>
