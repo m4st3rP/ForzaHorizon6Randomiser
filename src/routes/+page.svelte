@@ -209,7 +209,7 @@
     <div class="max-w-7xl mx-auto space-y-8">
         
         <header class="text-center space-y-4 pt-4">
-            <h1 class="text-5xl font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-red-400 via-red-500 to-red-600">
+            <h1 class="text-5xl font-extrabold tracking-tight text-transparent bg-clip-text bg-linear-to-r from-red-400 via-red-500 to-red-600">
                 Forza Horizon 6 Randomiser
             </h1>
         </header>
@@ -318,7 +318,7 @@
                                         </button>
                                     </div>
                                 </div>
-                                <div class="flex flex-col gap-2 max-h-[200px] overflow-y-auto pr-2 custom-scrollbar">
+                                <div class="flex flex-col gap-2 max-h-50 overflow-y-auto pr-2 custom-scrollbar">
                                     {#each allAcquiredViaMethods as method}
                                         {@const isDisabled = ($settingsStore.disabledAcquiredVia || []).includes(method)}
                                         <label class="flex items-center gap-3 p-2 rounded-lg border hover:border-neutral-600 cursor-pointer transition-colors {isDisabled ? 'bg-neutral-950 border-neutral-800 text-neutral-500' : 'bg-red-500/10 border-red-500/30 text-red-400'}">
@@ -345,7 +345,7 @@
                     
                     <div class="flex justify-center items-center bg-neutral-900 p-6 rounded-3xl border border-neutral-800 shadow-xl">
                         <button 
-                            class="w-full md:w-auto px-12 py-5 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white font-bold rounded-2xl shadow-lg transition-transform active:scale-95 text-2xl"
+                            class="w-full md:w-auto px-12 py-5 bg-linear-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white font-bold rounded-2xl shadow-lg transition-transform active:scale-95 text-2xl"
                             onclick={() => roll()}
                         >
                             Roll
@@ -356,7 +356,7 @@
                         {@const carResults = results.filter(r => r.group === 'Car')}
                         {@const trackResults = results.filter(r => r.group === 'Track')}
                         <div class="bg-neutral-900 p-6 md:p-8 rounded-3xl border border-neutral-800 shadow-2xl relative overflow-hidden">
-                            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-red-400 via-red-500 to-red-600"></div>
+                            <div class="absolute top-0 left-0 w-full h-1 bg-linear-to-r from-red-400 via-red-500 to-red-600"></div>
                             
                             <div class="flex justify-between items-center mb-8 border-b border-neutral-800 pb-4">
                                 <h3 class="text-2xl font-bold text-white">Your Event</h3>
@@ -431,7 +431,7 @@
                             {/if}
                         </div>
                     {:else if currentSeed === ''}
-                        <div class="flex-grow flex items-center justify-center bg-neutral-900/50 p-12 rounded-3xl border border-neutral-800 border-dashed">
+                        <div class="grow flex items-center justify-center bg-neutral-900/50 p-12 rounded-3xl border border-neutral-800 border-dashed">
                             <p class="text-neutral-500 text-xl font-medium tracking-wide">Select your categories and hit Roll to begin</p>
                         </div>
                     {/if}
