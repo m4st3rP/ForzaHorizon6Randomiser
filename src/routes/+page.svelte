@@ -76,7 +76,7 @@
             // Load the small standalone option lists
             const simpleCategories = [
                 'car_class', 'countries', 'stock_tuned', 'car_value', 'drivetrain', 
-                'rarity', 'laps', 'season', 'weather', 'time_of_day'
+                'rarity', 'camera', 'laps', 'season', 'weather', 'time_of_day'
             ];
 
             await Promise.all(simpleCategories.map(async (catId) => {

@@ -68,6 +68,12 @@ export const CATEGORIES: CategoryDefinition[] = [
         group: 'Car'
     },
     {
+        id: 'camera',
+        label: 'Camera',
+        type: 'dynamic',
+        group: 'Car'
+    },
+    {
         id: 'specific_car',
         label: 'Car',
         type: 'dynamic', // Pulled from car data
