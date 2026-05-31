@@ -1,38 +1,38 @@
-Car_Type,Category
-Buggies, Buggies
-Classic Muscle, Muscle
-Classic Racers, Track Toys
-Classic Rally, Rally
-Classic Sports Cars, Sports Cars
-Cult Cars, Fun Stuff
-Drift Cars, Track Toys
-Eclectics, Fun Stuff
-Extreme Track Toys, Track Toys
-GT Cars, GT
-Hot Hatch, Hot Hatch
-Hypercars, Supercars
-Modern Muscle, Muscle
-Modern Rally, Rally
-Modern Sports Cars, Sports Cars
-Modern Super Saloons, Saloons
-Modern Supercars, Supercars
-Offroad, Offroad
-Pickups & 4x4's, Offroad
-Rally Monsters, Rally
-Rare Classics, Fun Stuff
-Retro Hot Hatch, Hot Hatch
-Retro Muscle, Muscle
-Retro Racers, Track Toys
-Retro Rally, Rally
-Retro Sports Cars, Sports Cars
-Retro Saloons, Saloons
-Retro Supercars, Supercars
-Rods and Customs, Fun Stuff
-Sports Utility Heroes, Offroad
-Super GT, GT
-Super Hot Hatch, Hot Hatch
-Track Toys, Track Toys
-UTVs, Buggies
-Unlimited Buggies, Buggies
-Unlimited Offroad, Offroad
-Vans and Utility, Offroad
+Car_Type,Category,Minimum_Class,Maximum_Class
+Buggies, Buggies,D,X
+Classic Muscle, Muscle,D,X
+Classic Racers, Track Toys,D,X
+Classic Rally, Rally,D,X
+Classic Sports Cars, Sports Cars,D,X
+Cult Cars, Fun Stuff,D,X
+Drift Cars, Track Toys,D,X
+Eclectics, Fun Stuff,D,X
+Extreme Track Toys, Track Toys,D,X
+GT Cars, GT,D,X
+Hot Hatch, Hot Hatch,D,X
+Hypercars, Supercars,D,X
+Modern Muscle, Muscle,D,X
+Modern Rally, Rally,D,X
+Modern Sports Cars, Sports Cars,D,X
+Modern Super Saloons, Saloons,D,X
+Modern Supercars, Supercars,D,X
+Offroad, Offroad,D,X
+Pickups & 4x4's, Offroad,D,X
+Rally Monsters, Rally,D,X
+Rare Classics, Fun Stuff,D,X
+Retro Hot Hatch, Hot Hatch,D,X
+Retro Muscle, Muscle,D,X
+Retro Racers, Track Toys,D,X
+Retro Rally, Rally,D,X
+Retro Sports Cars, Sports Cars,D,X
+Retro Saloons, Saloons,D,X
+Retro Supercars, Supercars,D,X
+Rods and Customs, Fun Stuff,D,X
+Sports Utility Heroes, Offroad,D,X
+Super GT, GT,D,X
+Super Hot Hatch, Hot Hatch,D,X
+Track Toys, Track Toys,D,X
+UTVs, Buggies,D,X
+Unlimited Buggies, Buggies,D,X
+Unlimited Offroad, Offroad,D,X
+Vans and Utility, Offroad,D,X
