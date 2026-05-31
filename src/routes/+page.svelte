@@ -210,13 +210,29 @@
                         <div>
                             <div class="flex items-center justify-between mb-3">
                                 <h3 class="font-semibold text-neutral-400 text-sm uppercase tracking-wider mb-0">Active Categories</h3>
-                                <button 
-                                    class="text-xs px-2 py-1 rounded border border-neutral-700 bg-neutral-900 text-neutral-400 hover:text-red-400 hover:border-red-500/50 transition-colors"
-                                    onclick={() => { settingsStore.update(s => ({ ...s, activeCategories: ['car_class', 'car_type', 'tracktype', 'season', 'time_of_day', 'weather'] })); }}
-                                    title="Reset to default categories"
-                                >
-                                    Reset
-                                </button>
+                                <div class="flex gap-2">
+                                    <button 
+                                        class="text-xs px-2 py-1 rounded border border-neutral-700 bg-neutral-900 text-neutral-400 hover:text-red-400 hover:border-red-500/50 transition-colors"
+                                        onclick={() => { settingsStore.update(s => ({ ...s, activeCategories: CATEGORIES.map(c => c.id) })); }}
+                                        title="Select all categories"
+                                    >
+                                        All
+                                    </button>
+                                    <button 
+                                        class="text-xs px-2 py-1 rounded border border-neutral-700 bg-neutral-900 text-neutral-400 hover:text-red-400 hover:border-red-500/50 transition-colors"
+                                        onclick={() => { settingsStore.update(s => ({ ...s, activeCategories: [] })); }}
+                                        title="Select no categories"
+                                    >
+                                        None
+                                    </button>
+                                    <button 
+                                        class="text-xs px-2 py-1 rounded border border-neutral-700 bg-neutral-900 text-neutral-400 hover:text-red-400 hover:border-red-500/50 transition-colors"
+                                        onclick={() => { settingsStore.update(s => ({ ...s, activeCategories: ['car_class', 'car_type', 'tracktype', 'season', 'time_of_day', 'weather'] })); }}
+                                        title="Reset to default categories"
+                                    >
+                                        Reset
+                                    </button>
+                                </div>
                             </div>
 
                             <h4 class="font-semibold text-neutral-400 text-xs uppercase tracking-wider mb-2 mt-4">Car Choices</h4>
