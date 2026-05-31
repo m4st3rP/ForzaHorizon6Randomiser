@@ -3,19 +3,19 @@ import type { CategoryDefinition } from '$lib/types';
 export const CATEGORIES: CategoryDefinition[] = [
     {
         id: 'car_class',
-        label: 'Car Class',
+        label: 'Class',
         type: 'dynamic',
         group: 'Car'
     },
     {
         id: 'car_type',
-        label: 'Car Type',
+        label: 'Type',
         type: 'dynamic',
         group: 'Car'
     },
     {
         id: 'broader_car_categories',
-        label: 'Broader Car Categories',
+        label: 'Category',
         type: 'dynamic',
         group: 'Car'
     },
@@ -27,7 +27,7 @@ export const CATEGORIES: CategoryDefinition[] = [
     },
     {
         id: 'stock_tuned',
-        label: 'Stock / Tuned',
+        label: 'Tuning',
         type: 'dynamic',
         group: 'Car'
     },
@@ -39,19 +39,19 @@ export const CATEGORIES: CategoryDefinition[] = [
     },
     {
         id: 'decades',
-        label: 'Decades',
+        label: 'Decade',
         type: 'dynamic',
         group: 'Car'
     },
     {
         id: 'year',
-        label: 'Specific Year',
+        label: 'Year',
         type: 'dynamic', // Pulled from car data
         group: 'Car'
     },
     {
         id: 'car_value',
-        label: 'Car Value',
+        label: 'Value',
         type: 'dynamic',
         group: 'Car'
     },
@@ -69,31 +69,31 @@ export const CATEGORIES: CategoryDefinition[] = [
     },
     {
         id: 'specific_car',
-        label: 'Specific Car',
+        label: 'Car',
         type: 'dynamic', // Pulled from car data
         group: 'Car'
     },
     {
         id: 'track',
-        label: 'Specific Track',
+        label: 'Track',
         type: 'dynamic', // Pulled from track data
         group: 'Track'
     },
     {
         id: 'tracktype',
-        label: 'Track Type',
+        label: 'Type',
         type: 'dynamic',
         group: 'Track'
     },
     {
         id: 'track_subtype',
-        label: 'Track Subtype',
+        label: 'Subtype',
         type: 'dynamic',
         group: 'Track'
     },
     {
         id: 'laps',
-        label: 'Amount of Laps',
+        label: 'Laps',
         type: 'dynamic',
         group: 'Track'
     },
@@ -111,7 +111,7 @@ export const CATEGORIES: CategoryDefinition[] = [
     },
     {
         id: 'time_of_day',
-        label: 'Time of Day',
+        label: 'Time',
         type: 'dynamic',
         group: 'Track'
     }
