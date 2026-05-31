@@ -117,9 +117,10 @@
         
         const newResults: CategoryResult[] = [];
 
-        for (const catId of activeCatIds) {
-            const def = CATEGORIES.find(c => c.id === catId);
-            if (!def) continue;
+        // Iterate over CATEGORIES to maintain their original group order
+        for (const def of CATEGORIES) {
+            const catId = def.id;
+            if (!activeCatIds.includes(catId)) continue;
 
             const opts = getOptionsForCategory(catId);
             if (opts.length === 0) continue;
@@ -142,7 +143,8 @@
             newResults.push({
                 categoryId: catId,
                 label: def.label,
-                results: selectedValues
+                results: selectedValues,
+                group: def.group
             });
         }
 
@@ -216,8 +218,25 @@
                                     Reset
                                 </button>
                             </div>
+
+                            <h4 class="font-semibold text-neutral-400 text-xs uppercase tracking-wider mb-2 mt-4">Car Choices</h4>
                             <div class="flex flex-wrap gap-2">
-                                {#each CATEGORIES as cat}
+                                {#each CATEGORIES.filter(c => c.group === 'Car') as cat}
+                                    {@const isActive = $settingsStore.activeCategories.includes(cat.id)}
+                                    <button 
+                                        class="px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 border {isActive ? 'bg-red-500/20 border-red-500/50 text-red-400' : 'bg-neutral-950 border-neutral-800 text-neutral-500 hover:border-neutral-600 hover:text-neutral-300'}"
+                                        onclick={() => toggleCategory(cat.id)}
+                                    >
+                                        {cat.label}
+                                    </button>
+                                {/each}
+                            </div>
+                            
+                            <div class="w-full h-px bg-neutral-800 my-4"></div>
+                            
+                            <h4 class="font-semibold text-neutral-400 text-xs uppercase tracking-wider mb-2">Track Choices</h4>
+                            <div class="flex flex-wrap gap-2">
+                                {#each CATEGORIES.filter(c => c.group === 'Track') as cat}
                                     {@const isActive = $settingsStore.activeCategories.includes(cat.id)}
                                     <button 
                                         class="px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 border {isActive ? 'bg-red-500/20 border-red-500/50 text-red-400' : 'bg-neutral-950 border-neutral-800 text-neutral-500 hover:border-neutral-600 hover:text-neutral-300'}"
@@ -244,6 +263,8 @@
                     </div>
 
                     {#if results.length > 0}
+                        {@const carResults = results.filter(r => r.group === 'Car')}
+                        {@const trackResults = results.filter(r => r.group === 'Track')}
                         <div class="bg-neutral-900 p-6 md:p-8 rounded-3xl border border-neutral-800 shadow-2xl relative overflow-hidden">
                             <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-red-400 via-red-500 to-red-600"></div>
                             
@@ -267,18 +288,41 @@
                                 </div>
                             </div>
 
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                {#each results as catResult}
-                                    <div class="bg-neutral-950 p-5 rounded-2xl border border-neutral-800 flex flex-col justify-center">
-                                        <div class="text-xs font-bold text-neutral-500 uppercase tracking-wider mb-2">{catResult.label}</div>
-                                        <div class="space-y-1">
-                                            {#each catResult.results as res}
-                                                <div class="text-xl md:text-2xl font-semibold text-neutral-100">{res}</div>
-                                            {/each}
+                            {#if carResults.length > 0}
+                                <h4 class="text-lg font-bold text-neutral-300 mb-4 mt-2">Car</h4>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    {#each carResults as catResult}
+                                        <div class="bg-neutral-950 p-5 rounded-2xl border border-neutral-800 flex flex-col justify-center">
+                                            <div class="text-xs font-bold text-neutral-500 uppercase tracking-wider mb-2">{catResult.label}</div>
+                                            <div class="space-y-1">
+                                                {#each catResult.results as res}
+                                                    <div class="text-xl md:text-2xl font-semibold text-neutral-100">{res}</div>
+                                                {/each}
+                                            </div>
                                         </div>
-                                    </div>
-                                {/each}
-                            </div>
+                                    {/each}
+                                </div>
+                            {/if}
+                            
+                            {#if carResults.length > 0 && trackResults.length > 0}
+                                <div class="w-full h-px bg-neutral-800 my-8"></div>
+                            {/if}
+                            
+                            {#if trackResults.length > 0}
+                                <h4 class="text-lg font-bold text-neutral-300 mb-4">Track / Event</h4>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    {#each trackResults as catResult}
+                                        <div class="bg-neutral-950 p-5 rounded-2xl border border-neutral-800 flex flex-col justify-center">
+                                            <div class="text-xs font-bold text-neutral-500 uppercase tracking-wider mb-2">{catResult.label}</div>
+                                            <div class="space-y-1">
+                                                {#each catResult.results as res}
+                                                    <div class="text-xl md:text-2xl font-semibold text-neutral-100">{res}</div>
+                                                {/each}
+                                            </div>
+                                        </div>
+                                    {/each}
+                                </div>
+                            {/if}
                         </div>
                     {:else if currentSeed === ''}
                         <div class="flex-grow flex items-center justify-center bg-neutral-900/50 p-12 rounded-3xl border border-neutral-800 border-dashed">

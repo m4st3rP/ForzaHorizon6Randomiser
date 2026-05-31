@@ -4,96 +4,115 @@ export const CATEGORIES: CategoryDefinition[] = [
     {
         id: 'car_class',
         label: 'Car Class',
-        type: 'dynamic'
+        type: 'dynamic',
+        group: 'Car'
     },
     {
         id: 'car_type',
         label: 'Car Type',
-        type: 'dynamic'
+        type: 'dynamic',
+        group: 'Car'
     },
     {
         id: 'broader_car_categories',
         label: 'Broader Car Categories',
-        type: 'dynamic'
+        type: 'dynamic',
+        group: 'Car'
     },
     {
         id: 'countries',
         label: 'Country',
-        type: 'dynamic'
+        type: 'dynamic',
+        group: 'Car'
     },
     {
         id: 'stock_tuned',
         label: 'Stock / Tuned',
-        type: 'dynamic'
+        type: 'dynamic',
+        group: 'Car'
     },
     {
         id: 'manufacturer',
         label: 'Manufacturer',
-        type: 'dynamic' // Pulled from car data
+        type: 'dynamic', // Pulled from car data
+        group: 'Car'
     },
     {
         id: 'decades',
         label: 'Decades / Centuries',
-        type: 'dynamic'
+        type: 'dynamic',
+        group: 'Car'
     },
     {
         id: 'year',
         label: 'Specific Year',
-        type: 'dynamic' // Pulled from car data
+        type: 'dynamic', // Pulled from car data
+        group: 'Car'
     },
     {
         id: 'car_value',
         label: 'Car Value',
-        type: 'dynamic'
+        type: 'dynamic',
+        group: 'Car'
     },
     {
         id: 'drivetrain',
         label: 'Drivetrain',
-        type: 'dynamic'
+        type: 'dynamic',
+        group: 'Car'
     },
     {
         id: 'rarity',
         label: 'Rarity',
-        type: 'dynamic'
+        type: 'dynamic',
+        group: 'Car'
     },
     {
         id: 'specific_car',
         label: 'Specific Car',
-        type: 'dynamic' // Pulled from car data
+        type: 'dynamic', // Pulled from car data
+        group: 'Car'
     },
     {
         id: 'track',
         label: 'Specific Track',
-        type: 'dynamic' // Pulled from track data
+        type: 'dynamic', // Pulled from track data
+        group: 'Track'
     },
     {
         id: 'tracktype',
         label: 'Track Type',
-        type: 'dynamic'
+        type: 'dynamic',
+        group: 'Track'
     },
     {
         id: 'track_subtype',
         label: 'Track Subtype',
-        type: 'dynamic'
+        type: 'dynamic',
+        group: 'Track'
     },
     {
         id: 'laps',
         label: 'Amount of Laps',
-        type: 'dynamic'
+        type: 'dynamic',
+        group: 'Track'
     },
     {
         id: 'season',
         label: 'Season',
-        type: 'dynamic'
+        type: 'dynamic',
+        group: 'Track'
     },
     {
         id: 'weather',
         label: 'Weather',
-        type: 'dynamic'
+        type: 'dynamic',
+        group: 'Track'
     },
     {
         id: 'time_of_day',
         label: 'Time of Day',
-        type: 'dynamic'
+        type: 'dynamic',
+        group: 'Track'
     }
 ];
