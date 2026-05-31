@@ -44,14 +44,7 @@
 
         opts['year'] = [...new Set(allYears.map(y => String(y)))].sort();
 
-        opts['decades'] = [...new Set(allYears.map(y => {
-            if (y < 1950) return 'Pre-1950s';
-            return `${Math.floor(y / 10) * 10}s`;
-        }))].sort((a, b) => {
-            if (a === 'Pre-1950s') return -1;
-            if (b === 'Pre-1950s') return 1;
-            return a.localeCompare(b);
-        });
+        opts['decades'] = [...new Set(allYears.map(y => `${Math.floor(y / 10) * 10}s`))].sort();
 
         opts['specific_car'] = filteredCars.map(c => {
             const acquired = c['Acquired via'] ? c['Acquired via'].trim() : '';

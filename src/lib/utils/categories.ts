@@ -39,7 +39,7 @@ export const CATEGORIES: CategoryDefinition[] = [
     },
     {
         id: 'decades',
-        label: 'Decades / Centuries',
+        label: 'Decades',
         type: 'dynamic',
         group: 'Car'
     },
