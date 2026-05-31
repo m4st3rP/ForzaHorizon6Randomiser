@@ -4,7 +4,8 @@ import type { RandomizerSettings } from '$lib/types';
 
 const defaultSettings: RandomizerSettings = {
     activeCategories: [], // Empty means we should initialize to sensible defaults on first load
-    outputCount: 1
+    outputCount: 1,
+    disabledAcquiredVia: []
 };
 
 function createPersistentStore<T>(key: string, initialValue: T) {
@@ -21,6 +22,9 @@ function createPersistentStore<T>(key: string, initialValue: T) {
                 // Ensure activeCategories exists and is an array
                 if (!Array.isArray((value as any).activeCategories)) {
                     (value as any).activeCategories = [];
+                }
+                if (!Array.isArray((value as any).disabledAcquiredVia)) {
+                    (value as any).disabledAcquiredVia = [];
                 }
             } catch (e) {
                 console.error(`Error parsing stored value for ${key}`, e);

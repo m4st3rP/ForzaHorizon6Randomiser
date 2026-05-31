@@ -41,5 +41,6 @@ export interface CategoryResult {
 export interface RandomizerSettings {
     activeCategories: string[];
     outputCount: number;
+    disabledAcquiredVia: string[];
 }
 

@@ -7,17 +7,66 @@
     import { CATEGORIES } from '$lib/utils/categories';
     import type { Car, Race, CategoryResult, CarType, OptionData } from '$lib/types';
 
-    let cars: Car[] = [];
-    let races: Race[] = [];
-    let carTypes: CarType[] = [];
+    let cars: Car[] = $state([]);
+    let races: Race[] = $state([]);
+    let carTypes: CarType[] = $state([]);
     let loading = $state(true);
     let error: string | null = $state(null);
 
     let results: CategoryResult[] = $state([]);
     let currentSeed: string = $state('');
 
+    // Extracted dynamic options
+    let allAcquiredViaMethods: string[] = $state([]);
+
+    // Base options from simple CSVs
+    let baseOptions: Record<string, string[]> = $state({});
+
+    // Filtered cars based on Acquired via logic
+    let filteredCars = $derived(cars.filter(c => {
+        if (!c['Acquired via']) return true;
+        const methods = c['Acquired via'].split('/').map(s => s.trim()).filter(Boolean);
+        if (methods.length === 0) return true;
+        return methods.some(m => !($settingsStore.disabledAcquiredVia || []).includes(m));
+    }));
+
     // Dynamic options extracted from data
-    let dynamicOptions: Record<string, string[]> = $state({});
+    let dynamicOptions = $derived.by(() => {
+        const opts = { ...baseOptions };
+        if (!filteredCars.length) return opts;
+
+        opts['manufacturer'] = [...new Set(filteredCars.map(c => c.Make).filter(Boolean))].sort();
+        
+        const allYears = filteredCars.map(c => {
+            const match = String(c['Car Name']).match(/^(\d{4})/);
+            return match ? parseInt(match[1]) : null;
+        }).filter(Boolean) as number[];
+
+        opts['year'] = [...new Set(allYears.map(y => String(y)))].sort();
+
+        opts['decades'] = [...new Set(allYears.map(y => {
+            if (y < 1950) return 'Pre-1950s';
+            return `${Math.floor(y / 10) * 10}s`;
+        }))].sort((a, b) => {
+            if (a === 'Pre-1950s') return -1;
+            if (b === 'Pre-1950s') return 1;
+            return a.localeCompare(b);
+        });
+
+        opts['specific_car'] = filteredCars.map(c => {
+            const acquired = c['Acquired via'] ? c['Acquired via'].trim() : '';
+            return acquired ? `${c['Car Name']}||Acquired via: ${acquired}` : c['Car Name'];
+        });
+
+        opts['track'] = races.map(r => r.Name);
+        opts['tracktype'] = [...new Set(races.map(r => r.Type).filter(Boolean))].sort();
+        opts['track_subtype'] = [...new Set(races.map(r => r.Subtype).filter(Boolean))].sort();
+
+        opts['car_type'] = [...new Set(carTypes.map(c => c.Car_Type).filter(Boolean))].sort();
+        opts['broader_car_categories'] = [...new Set(carTypes.map(c => c.Category).filter(Boolean))].sort();
+
+        return opts;
+    });
 
     onMount(async () => {
         try {
@@ -39,40 +88,18 @@
 
             await Promise.all(simpleCategories.map(async (catId) => {
                 const data = await loadCsv<OptionData>(`${base}/data/${catId}.csv`);
-                dynamicOptions[catId] = data.map(row => row.Value).filter(Boolean);
+                baseOptions[catId] = data.map(row => row.Value).filter(Boolean);
             }));
 
-            // Extract unique values for other dynamic categories
-            dynamicOptions['manufacturer'] = [...new Set(cars.map(c => c.Make).filter(Boolean))].sort();
-            
-            // The year is often the first 4 characters of the Car Name
-            const allYears = cars.map(c => {
-                const match = String(c['Car Name']).match(/^(\d{4})/);
-                return match ? parseInt(match[1]) : null;
-            }).filter(Boolean) as number[];
-
-            dynamicOptions['year'] = [...new Set(allYears.map(y => String(y)))].sort();
-
-            dynamicOptions['decades'] = [...new Set(allYears.map(y => {
-                if (y < 1950) return 'Pre-1950s';
-                return `${Math.floor(y / 10) * 10}s`;
-            }))].sort((a, b) => {
-                if (a === 'Pre-1950s') return -1;
-                if (b === 'Pre-1950s') return 1;
-                return a.localeCompare(b);
+            // Extract all possible Acquired via methods
+            const methodsSet = new Set<string>();
+            cars.forEach(c => {
+                if (c['Acquired via']) {
+                    const methods = c['Acquired via'].split('/').map(s => s.trim()).filter(Boolean);
+                    methods.forEach(m => methodsSet.add(m));
+                }
             });
-
-            dynamicOptions['specific_car'] = cars.map(c => {
-                const acquired = c['Acquired via'] ? c['Acquired via'].trim() : '';
-                return acquired ? `${c['Car Name']}||Acquired via: ${acquired}` : c['Car Name'];
-            });
-            dynamicOptions['track'] = races.map(r => r.Name);
-            dynamicOptions['tracktype'] = [...new Set(races.map(r => r.Type).filter(Boolean))].sort();
-            dynamicOptions['track_subtype'] = [...new Set(races.map(r => r.Subtype).filter(Boolean))].sort();
-
-            // Fetch from car types CSV
-            dynamicOptions['car_type'] = [...new Set(carTypes.map(c => c.Car_Type).filter(Boolean))].sort();
-            dynamicOptions['broader_car_categories'] = [...new Set(carTypes.map(c => c.Category).filter(Boolean))].sort();
+            allAcquiredViaMethods = Array.from(methodsSet).sort();
 
             // Initialize store if empty
             if (!$settingsStore.activeCategories || $settingsStore.activeCategories.length === 0) {
@@ -172,6 +199,17 @@
         }
     }
 
+    function toggleAcquiredVia(method: string) {
+        settingsStore.update(s => {
+            const arr = s.disabledAcquiredVia || [];
+            if (arr.includes(method)) {
+                return { ...s, disabledAcquiredVia: arr.filter(v => v !== method) };
+            } else {
+                return { ...s, disabledAcquiredVia: [...arr, method] };
+            }
+        });
+    }
+
 </script>
 
 <div class="min-h-screen bg-neutral-950 text-neutral-100 p-4 md:p-8 font-sans">
@@ -265,6 +303,46 @@
                                     </button>
                                 {/each}
                             </div>
+
+                            {#if allAcquiredViaMethods.length > 0}
+                                <div class="w-full h-px bg-neutral-800 my-4"></div>
+                                <div class="flex items-center justify-between mb-3">
+                                    <h3 class="font-semibold text-neutral-400 text-sm uppercase tracking-wider mb-0">Allow Cars By Source</h3>
+                                    <div class="flex gap-2">
+                                        <button 
+                                            class="text-xs px-2 py-1 rounded border border-neutral-700 bg-neutral-900 text-neutral-400 hover:text-red-400 hover:border-red-500/50 transition-colors"
+                                            onclick={() => { settingsStore.update(s => ({ ...s, disabledAcquiredVia: [] })); }}
+                                            title="Enable all sources"
+                                        >
+                                            All
+                                        </button>
+                                        <button 
+                                            class="text-xs px-2 py-1 rounded border border-neutral-700 bg-neutral-900 text-neutral-400 hover:text-red-400 hover:border-red-500/50 transition-colors"
+                                            onclick={() => { settingsStore.update(s => ({ ...s, disabledAcquiredVia: [...allAcquiredViaMethods] })); }}
+                                            title="Disable all sources"
+                                        >
+                                            None
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="flex flex-col gap-2 max-h-[200px] overflow-y-auto pr-2 custom-scrollbar">
+                                    {#each allAcquiredViaMethods as method}
+                                        {@const isDisabled = ($settingsStore.disabledAcquiredVia || []).includes(method)}
+                                        <label class="flex items-center gap-3 p-2 rounded-lg border hover:border-neutral-600 cursor-pointer transition-colors {isDisabled ? 'bg-neutral-950 border-neutral-800 text-neutral-500' : 'bg-red-500/10 border-red-500/30 text-red-400'}">
+                                            <input 
+                                                type="checkbox" 
+                                                class="accent-red-500 w-4 h-4 rounded border-neutral-700 bg-neutral-900 focus:ring-red-500 focus:ring-offset-neutral-900"
+                                                checked={!isDisabled}
+                                                onchange={() => toggleAcquiredVia(method)}
+                                            />
+                                            <span class="text-sm font-medium">{method}</span>
+                                        </label>
+                                    {/each}
+                                </div>
+                                <div class="text-xs text-neutral-500 mt-2">
+                                    <p>Pool currently includes {filteredCars.length} / {cars.length} cars.</p>
+                                </div>
+                            {/if}
                         </div>
                     </div>
                 </div>
