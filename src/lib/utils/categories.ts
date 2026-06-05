@@ -120,5 +120,35 @@ export const CATEGORIES: CategoryDefinition[] = [
         label: 'Time',
         type: 'dynamic',
         group: 'Track'
+    },
+    {
+        id: 'horizon_play_type',
+        label: 'Play Type',
+        type: 'dynamic',
+        group: 'Horizon Play'
+    },
+    {
+        id: 'horizon_track_type',
+        label: 'Track Type',
+        type: 'dynamic',
+        group: 'Horizon Play'
+    },
+    {
+        id: 'horizon_class',
+        label: 'Class',
+        type: 'dynamic',
+        group: 'Horizon Play'
+    },
+    {
+        id: 'horizon_drivetrain',
+        label: 'Drivetrain',
+        type: 'dynamic',
+        group: 'Horizon Play'
+    },
+    {
+        id: 'horizon_collisions',
+        label: 'Collisions',
+        type: 'dynamic',
+        group: 'Horizon Play'
     }
 ];
