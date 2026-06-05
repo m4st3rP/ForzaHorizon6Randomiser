@@ -2,14 +2,14 @@ import { writable } from 'svelte/store';
 import { browser } from '$app/environment';
 import type { RandomizerSettings } from '$lib/types';
 
-const defaultSettings: RandomizerSettings = {
+export const defaultSettings: RandomizerSettings = {
     activeCategories: [], // Empty means we should initialize to sensible defaults on first load
     outputCount: 1,
     disabledAcquiredVia: [],
     lockedResults: {}
 };
 
-function createPersistentStore<T>(key: string, initialValue: T) {
+export function createPersistentStore<T>(key: string, initialValue: T) {
     // Initialize with the value from local storage if running in the browser
     let value = initialValue;
     if (browser) {
