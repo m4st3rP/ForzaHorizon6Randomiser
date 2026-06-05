@@ -493,12 +493,12 @@
                                             <div class={catResult.results.length > 1 ? "grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1" : "space-y-1"}>
                                                 {#each catResult.results as res}
                                                     <div class="text-xl md:text-2xl font-semibold text-neutral-100 min-w-0 break-words">
-                                                        {#if res.includes('||')}
+                                                        {#if res && res.includes('||')}
                                                             {@const parts = res.split('||')}
                                                             {parts[0]}
                                                             <span class="block text-sm md:text-base font-normal text-neutral-400 mt-1">{parts[1]}</span>
                                                         {:else}
-                                                            {res}
+                                                            {res || '---'}
                                                         {/if}
                                                     </div>
                                                 {/each}
@@ -533,12 +533,12 @@
                                             <div class={catResult.results.length > 1 ? "grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1" : "space-y-1"}>
                                                 {#each catResult.results as res}
                                                     <div class="text-xl md:text-2xl font-semibold text-neutral-100 min-w-0 break-words">
-                                                        {#if res.includes('||')}
+                                                        {#if res && res.includes('||')}
                                                             {@const parts = res.split('||')}
                                                             {parts[0]}
                                                             <span class="block text-sm md:text-base font-normal text-neutral-400 mt-1">{parts[1]}</span>
                                                         {:else}
-                                                            {res}
+                                                            {res || '---'}
                                                         {/if}
                                                     </div>
                                                 {/each}
@@ -573,12 +573,12 @@
                                             <div class={catResult.results.length > 1 ? "grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1" : "space-y-1"}>
                                                 {#each catResult.results as res}
                                                     <div class="text-xl md:text-2xl font-semibold text-neutral-100 min-w-0 break-words">
-                                                        {#if res.includes('||')}
+                                                        {#if res && res.includes('||')}
                                                             {@const parts = res.split('||')}
                                                             {parts[0]}
                                                             <span class="block text-sm md:text-base font-normal text-neutral-400 mt-1">{parts[1]}</span>
                                                         {:else}
-                                                            {res}
+                                                            {res || '---'}
                                                         {/if}
                                                     </div>
                                                 {/each}
