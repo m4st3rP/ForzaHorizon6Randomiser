@@ -88,7 +88,8 @@
             // Load the small standalone option lists
             const simpleCategories = [
                 'car_class', 'countries', 'stock_tuned', 'car_value', 'drivetrain', 
-                'rarity', 'camera', 'laps', 'season', 'weather', 'time_of_day'
+                'rarity', 'camera', 'laps', 'season', 'weather', 'time_of_day',
+                'horizon_play_type', 'horizon_track_type', 'horizon_class', 'horizon_drivetrain', 'horizon_collisions'
             ];
 
             await Promise.all(simpleCategories.map(async (catId) => {
@@ -356,6 +357,21 @@
                                 {/each}
                             </div>
 
+                            <div class="w-full h-px bg-neutral-800 my-4"></div>
+
+                            <h4 class="font-semibold text-neutral-400 text-xs uppercase tracking-wider mb-2">Horizon Play Choices</h4>
+                            <div class="flex flex-wrap gap-2">
+                                {#each CATEGORIES.filter(c => c.group === 'Horizon Play') as cat}
+                                    {@const isActive = $settingsStore.activeCategories.includes(cat.id)}
+                                    <button
+                                        class="px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 border {isActive ? 'bg-red-500/20 border-red-500/50 text-red-400' : 'bg-neutral-950 border-neutral-800 text-neutral-500 hover:border-neutral-600 hover:text-neutral-300'}"
+                                        onclick={() => toggleCategory(cat.id)}
+                                    >
+                                        {cat.label}
+                                    </button>
+                                {/each}
+                            </div>
+
                             {#if allAcquiredViaMethods.length > 0}
                                 <div class="w-full h-px bg-neutral-800 my-4"></div>
                                 <div class="flex items-center justify-between mb-3">
@@ -432,6 +448,7 @@
                     {#if results.length > 0}
                         {@const carResults = results.filter(r => r.group === 'Car')}
                         {@const trackResults = results.filter(r => r.group === 'Track')}
+                        {@const horizonResults = results.filter(r => r.group === 'Horizon Play')}
                         <div class="bg-neutral-900 p-6 md:p-8 rounded-3xl border border-neutral-800 shadow-2xl relative overflow-hidden">
                             <div class="absolute top-0 left-0 w-full h-1 bg-linear-to-r from-red-400 via-red-500 to-red-600"></div>
                             
@@ -496,9 +513,49 @@
                             {/if}
                             
                             {#if trackResults.length > 0}
-                                <h4 class="text-lg font-bold text-neutral-300 mb-4">Track / Event</h4>
+                                <h4 class="text-lg font-bold text-neutral-300 mb-4">Track</h4>
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     {#each trackResults as catResult}
+                                        {@const isLocked = !!$settingsStore.lockedResults[catResult.categoryId]}
+                                        <div class="bg-neutral-950 p-5 rounded-2xl border {isLocked ? 'border-red-500/50' : 'border-neutral-800'} flex flex-col justify-center relative group">
+                                            <button
+                                                class="absolute top-3 right-3 p-1.5 rounded-lg transition-colors {isLocked ? 'text-red-500 bg-red-500/10' : 'text-neutral-600 hover:text-neutral-400 bg-neutral-900 opacity-0 group-hover:opacity-100'}"
+                                                onclick={() => toggleLock(catResult.categoryId)}
+                                                title={isLocked ? "Unlock Category" : "Lock Category"}
+                                            >
+                                                {#if isLocked}
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                                                {:else}
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 9.9-1"></path></svg>
+                                                {/if}
+                                            </button>
+                                            <div class="text-xs font-bold {isLocked ? 'text-red-500/70' : 'text-neutral-500'} uppercase tracking-wider mb-2">{catResult.label}</div>
+                                            <div class={catResult.results.length > 1 ? "grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1" : "space-y-1"}>
+                                                {#each catResult.results as res}
+                                                    <div class="text-xl md:text-2xl font-semibold text-neutral-100 min-w-0 break-words">
+                                                        {#if res.includes('||')}
+                                                            {@const parts = res.split('||')}
+                                                            {parts[0]}
+                                                            <span class="block text-sm md:text-base font-normal text-neutral-400 mt-1">{parts[1]}</span>
+                                                        {:else}
+                                                            {res}
+                                                        {/if}
+                                                    </div>
+                                                {/each}
+                                            </div>
+                                        </div>
+                                    {/each}
+                                </div>
+                            {/if}
+
+                            {#if trackResults.length > 0 && horizonResults.length > 0}
+                                <div class="w-full h-px bg-neutral-800 my-8"></div>
+                            {/if}
+
+                            {#if horizonResults.length > 0}
+                                <h4 class="text-lg font-bold text-neutral-300 mb-4">Horizon Play</h4>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    {#each horizonResults as catResult}
                                         {@const isLocked = !!$settingsStore.lockedResults[catResult.categoryId]}
                                         <div class="bg-neutral-950 p-5 rounded-2xl border {isLocked ? 'border-red-500/50' : 'border-neutral-800'} flex flex-col justify-center relative group">
                                             <button

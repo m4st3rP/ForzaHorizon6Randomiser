@@ -28,14 +28,14 @@ export interface CategoryDefinition {
     id: string;
     label: string;
     type: 'dynamic';
-    group: 'Car' | 'Track';
+    group: 'Car' | 'Track' | 'Horizon Play';
 }
 
 export interface CategoryResult {
     categoryId: string;
     label: string;
     results: string[];
-    group: 'Car' | 'Track';
+    group: 'Car' | 'Track' | 'Horizon Play';
 }
 
 export interface RandomizerSettings {
