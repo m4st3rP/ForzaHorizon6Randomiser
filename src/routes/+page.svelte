@@ -13,7 +13,19 @@
     let loading = $state(true);
     let error: string | null = $state(null);
 
-    let results: CategoryResult[] = $state([]);
+    let unlockedResults: CategoryResult[] = $state([]);
+    let results = $derived.by(() => {
+        const activeCatIds = $settingsStore.activeCategories || [];
+        return unlockedResults.map(r => {
+            if ($settingsStore.lockedResults[r.categoryId] && activeCatIds.includes(r.categoryId)) {
+                return {
+                    ...r,
+                    results: $settingsStore.lockedResults[r.categoryId]
+                };
+            }
+            return r;
+        }).filter(r => activeCatIds.includes(r.categoryId));
+    });
     let currentSeed: string = $state('');
 
     // Extracted dynamic options
@@ -135,7 +147,6 @@
         currentSeed = seed;
         const prng = mulberry32(seedToNumber(seed));
 
-        const activeCatIds = $settingsStore.activeCategories || [];
         const outputCount = $settingsStore.outputCount || 1;
         
         const newResults: CategoryResult[] = [];
@@ -143,8 +154,7 @@
         // Iterate over CATEGORIES to maintain their original group order
         for (const def of CATEGORIES) {
             const catId = def.id;
-            if (!activeCatIds.includes(catId)) continue;
-
+            // Always roll for all categories so we have values if they are unlocked later
             const opts = getOptionsForCategory(catId);
             if (opts.length === 0) continue;
 
@@ -171,18 +181,53 @@
             });
         }
 
-        results = newResults;
+        unlockedResults = newResults;
     }
 
     function toggleCategory(catId: string) {
         settingsStore.update(s => {
             const arr = s.activeCategories || [];
+            const lockedResults = { ...s.lockedResults };
             if (arr.includes(catId)) {
-                return { ...s, activeCategories: arr.filter(v => v !== catId) };
+                delete lockedResults[catId];
+                return {
+                    ...s,
+                    activeCategories: arr.filter(v => v !== catId),
+                    lockedResults
+                };
             } else {
                 return { ...s, activeCategories: [...arr, catId] };
             }
         });
+    }
+
+    function toggleLock(catId: string) {
+        settingsStore.update(s => {
+            const lockedResults = { ...s.lockedResults };
+            if (lockedResults[catId]) {
+                delete lockedResults[catId];
+            } else {
+                const result = results.find(r => r.categoryId === catId);
+                if (result) {
+                    lockedResults[catId] = [...result.results];
+                }
+            }
+            return { ...s, lockedResults };
+        });
+    }
+
+    function lockAll() {
+        settingsStore.update(s => {
+            const lockedResults = { ...s.lockedResults };
+            results.forEach(r => {
+                lockedResults[r.categoryId] = [...r.results];
+            });
+            return { ...s, lockedResults };
+        });
+    }
+
+    function unlockAll() {
+        settingsStore.update(s => ({ ...s, lockedResults: {} }));
     }
 
     function changeOutputCount(e: Event) {
@@ -254,14 +299,33 @@
                                     </button>
                                     <button 
                                         class="text-xs px-2 py-1 rounded border border-neutral-700 bg-neutral-900 text-neutral-400 hover:text-red-400 hover:border-red-500/50 transition-colors"
-                                        onclick={() => { settingsStore.update(s => ({ ...s, activeCategories: [] })); }}
+                                        onclick={() => {
+                                            settingsStore.update(s => ({
+                                                ...s,
+                                                activeCategories: [],
+                                                lockedResults: {}
+                                            }));
+                                        }}
                                         title="Select no categories"
                                     >
                                         None
                                     </button>
                                     <button 
                                         class="text-xs px-2 py-1 rounded border border-neutral-700 bg-neutral-900 text-neutral-400 hover:text-red-400 hover:border-red-500/50 transition-colors"
-                                        onclick={() => { settingsStore.update(s => ({ ...s, activeCategories: ['car_class', 'car_type', 'tracktype', 'season', 'time_of_day', 'weather'] })); }}
+                                        onclick={() => {
+                                            settingsStore.update(s => {
+                                                const defaults = ['car_class', 'car_type', 'tracktype', 'season', 'time_of_day', 'weather'];
+                                                const lockedResults = { ...s.lockedResults };
+                                                Object.keys(lockedResults).forEach(id => {
+                                                    if (!defaults.includes(id)) delete lockedResults[id];
+                                                });
+                                                return {
+                                                    ...s,
+                                                    activeCategories: defaults,
+                                                    lockedResults
+                                                };
+                                            });
+                                        }}
                                         title="Reset to default categories"
                                     >
                                         Reset
@@ -343,13 +407,31 @@
                 <!-- Main Display -->
                 <div class="lg:col-span-8 space-y-8 flex flex-col">
                     
-                    <div class="flex justify-center items-center bg-neutral-900 p-6 rounded-3xl border border-neutral-800 shadow-xl">
+                    <div class="flex flex-col md:flex-row gap-4 items-center bg-neutral-900 p-6 rounded-3xl border border-neutral-800 shadow-xl">
                         <button 
-                            class="w-full md:w-auto px-12 py-5 bg-linear-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white font-bold rounded-2xl shadow-lg transition-transform active:scale-95 text-2xl"
+                            class="w-full md:grow px-12 py-5 bg-linear-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white font-bold rounded-2xl shadow-lg transition-transform active:scale-95 text-2xl"
                             onclick={() => roll()}
                         >
                             Roll
                         </button>
+                        <div class="flex gap-2 w-full md:w-auto">
+                            <button
+                                class="flex-1 md:flex-none px-4 py-5 bg-neutral-800 hover:bg-neutral-700 text-neutral-300 font-bold rounded-2xl border border-neutral-700 transition-colors flex items-center justify-center gap-2"
+                                onclick={lockAll}
+                                title="Lock all current results"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                                <span>Lock All</span>
+                            </button>
+                            <button
+                                class="flex-1 md:flex-none px-4 py-5 bg-neutral-800 hover:bg-neutral-700 text-neutral-300 font-bold rounded-2xl border border-neutral-700 transition-colors flex items-center justify-center gap-2"
+                                onclick={unlockAll}
+                                title="Unlock all results"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 9.9-1"></path></svg>
+                                <span>Unlock All</span>
+                            </button>
+                        </div>
                     </div>
 
                     {#if results.length > 0}
@@ -382,8 +464,20 @@
                                 <h4 class="text-lg font-bold text-neutral-300 mb-4 mt-2">Car</h4>
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     {#each carResults as catResult}
-                                        <div class="bg-neutral-950 p-5 rounded-2xl border border-neutral-800 flex flex-col justify-center">
-                                            <div class="text-xs font-bold text-neutral-500 uppercase tracking-wider mb-2">{catResult.label}</div>
+                                        {@const isLocked = !!$settingsStore.lockedResults[catResult.categoryId]}
+                                        <div class="bg-neutral-950 p-5 rounded-2xl border {isLocked ? 'border-red-500/50' : 'border-neutral-800'} flex flex-col justify-center relative group">
+                                            <button
+                                                class="absolute top-3 right-3 p-1.5 rounded-lg transition-colors {isLocked ? 'text-red-500 bg-red-500/10' : 'text-neutral-600 hover:text-neutral-400 bg-neutral-900 opacity-0 group-hover:opacity-100'}"
+                                                onclick={() => toggleLock(catResult.categoryId)}
+                                                title={isLocked ? "Unlock Category" : "Lock Category"}
+                                            >
+                                                {#if isLocked}
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                                                {:else}
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 9.9-1"></path></svg>
+                                                {/if}
+                                            </button>
+                                            <div class="text-xs font-bold {isLocked ? 'text-red-500/70' : 'text-neutral-500'} uppercase tracking-wider mb-2">{catResult.label}</div>
                                             <div class="space-y-1">
                                                 {#each catResult.results as res}
                                                     <div class="text-xl md:text-2xl font-semibold text-neutral-100">
@@ -410,8 +504,20 @@
                                 <h4 class="text-lg font-bold text-neutral-300 mb-4">Track / Event</h4>
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     {#each trackResults as catResult}
-                                        <div class="bg-neutral-950 p-5 rounded-2xl border border-neutral-800 flex flex-col justify-center">
-                                            <div class="text-xs font-bold text-neutral-500 uppercase tracking-wider mb-2">{catResult.label}</div>
+                                        {@const isLocked = !!$settingsStore.lockedResults[catResult.categoryId]}
+                                        <div class="bg-neutral-950 p-5 rounded-2xl border {isLocked ? 'border-red-500/50' : 'border-neutral-800'} flex flex-col justify-center relative group">
+                                            <button
+                                                class="absolute top-3 right-3 p-1.5 rounded-lg transition-colors {isLocked ? 'text-red-500 bg-red-500/10' : 'text-neutral-600 hover:text-neutral-400 bg-neutral-900 opacity-0 group-hover:opacity-100'}"
+                                                onclick={() => toggleLock(catResult.categoryId)}
+                                                title={isLocked ? "Unlock Category" : "Lock Category"}
+                                            >
+                                                {#if isLocked}
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                                                {:else}
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 9.9-1"></path></svg>
+                                                {/if}
+                                            </button>
+                                            <div class="text-xs font-bold {isLocked ? 'text-red-500/70' : 'text-neutral-500'} uppercase tracking-wider mb-2">{catResult.label}</div>
                                             <div class="space-y-1">
                                                 {#each catResult.results as res}
                                                     <div class="text-xl md:text-2xl font-semibold text-neutral-100">

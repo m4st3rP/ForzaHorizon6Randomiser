@@ -42,5 +42,6 @@ export interface RandomizerSettings {
     activeCategories: string[];
     outputCount: number;
     disabledAcquiredVia: string[];
+    lockedResults: Record<string, string[]>;
 }
 
