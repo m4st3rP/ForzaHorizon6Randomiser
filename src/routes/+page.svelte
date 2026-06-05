@@ -407,14 +407,14 @@
                 <!-- Main Display -->
                 <div class="lg:col-span-8 space-y-8 flex flex-col">
                     
-                    <div class="flex flex-col md:flex-row gap-4 items-center bg-neutral-900 p-6 rounded-3xl border border-neutral-800 shadow-xl">
+                    <div class="flex flex-col md:flex-row gap-4 items-stretch md:items-center bg-neutral-900 p-6 rounded-3xl border border-neutral-800 shadow-xl">
                         <button 
-                            class="w-full md:grow px-12 py-5 bg-linear-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white font-bold rounded-2xl shadow-lg transition-transform active:scale-95 text-2xl"
+                            class="w-full md:w-auto md:flex-1 px-12 py-5 bg-linear-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white font-bold rounded-2xl shadow-lg transition-transform active:scale-95 text-2xl"
                             onclick={() => roll()}
                         >
                             Roll
                         </button>
-                        <div class="flex gap-2 w-full md:w-auto">
+                        <div class="flex flex-wrap gap-2 w-full md:w-auto">
                             <button
                                 class="flex-1 md:flex-none px-4 py-5 bg-neutral-800 hover:bg-neutral-700 text-neutral-300 font-bold rounded-2xl border border-neutral-700 transition-colors flex items-center justify-center gap-2"
                                 onclick={lockAll}
