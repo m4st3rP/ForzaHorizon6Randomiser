@@ -160,17 +160,12 @@
 
             const selectedValues: string[] = [];
             
-            const availableOptions = [...opts];
-            
-            for (let i = 0; i < outputCount; i++) {
-                if (availableOptions.length === 0) break;
-                
-                // Roll index
-                const index = Math.floor(prng() * availableOptions.length);
-                selectedValues.push(availableOptions[index]);
-                
-                // Remove from available so we don't pick duplicate if we have enough options
-                availableOptions.splice(index, 1);
+            if (opts.length > 0) {
+                for (let i = 0; i < outputCount; i++) {
+                    // Roll index from the full list of options to allow duplicates
+                    const index = Math.floor(prng() * opts.length);
+                    selectedValues.push(opts[index]);
+                }
             }
 
             newResults.push({
