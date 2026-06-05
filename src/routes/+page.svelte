@@ -232,7 +232,7 @@
 
     function changeOutputCount(e: Event) {
         const val = parseInt((e.target as HTMLInputElement).value);
-        if (val > 0 && val <= 10) {
+        if (val > 0 && val <= 12) {
             settingsStore.update(s => ({ ...s, outputCount: val }));
         }
     }
@@ -279,7 +279,7 @@
                                 id="output-count" 
                                 type="number" 
                                 min="1" 
-                                max="10" 
+                                max="12"
                                 value={$settingsStore.outputCount}
                                 onchange={changeOutputCount}
                                 class="bg-neutral-800 text-white w-16 px-2 py-1 rounded border border-neutral-700 text-center focus:outline-none focus:border-red-500 transition-colors"
@@ -407,16 +407,16 @@
                 <!-- Main Display -->
                 <div class="lg:col-span-8 space-y-8 flex flex-col">
                     
-                    <div class="flex flex-col md:flex-row gap-4 items-stretch md:items-center bg-neutral-900 p-6 rounded-3xl border border-neutral-800 shadow-xl">
+                    <div class="flex flex-col md:flex-row flex-wrap gap-4 items-stretch md:items-center bg-neutral-900 p-6 rounded-3xl border border-neutral-800 shadow-xl">
                         <button 
                             class="w-full md:w-auto md:flex-1 px-12 py-5 bg-linear-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white font-bold rounded-2xl shadow-lg transition-transform active:scale-95 text-2xl"
                             onclick={() => roll()}
                         >
                             Roll
                         </button>
-                        <div class="flex flex-wrap gap-2 w-full md:w-auto">
+                        <div class="flex flex-wrap gap-2 w-full md:w-auto md:min-w-fit">
                             <button
-                                class="flex-1 md:flex-none px-4 py-5 bg-neutral-800 hover:bg-neutral-700 text-neutral-300 font-bold rounded-2xl border border-neutral-700 transition-colors flex items-center justify-center gap-2"
+                                class="flex-1 md:flex-none px-4 py-3 md:py-5 bg-neutral-800 hover:bg-neutral-700 text-neutral-300 font-bold rounded-2xl border border-neutral-700 transition-colors flex items-center justify-center gap-2 whitespace-nowrap"
                                 onclick={lockAll}
                                 title="Lock all current results"
                             >
@@ -424,7 +424,7 @@
                                 <span>Lock All</span>
                             </button>
                             <button
-                                class="flex-1 md:flex-none px-4 py-5 bg-neutral-800 hover:bg-neutral-700 text-neutral-300 font-bold rounded-2xl border border-neutral-700 transition-colors flex items-center justify-center gap-2"
+                                class="flex-1 md:flex-none px-4 py-3 md:py-5 bg-neutral-800 hover:bg-neutral-700 text-neutral-300 font-bold rounded-2xl border border-neutral-700 transition-colors flex items-center justify-center gap-2 whitespace-nowrap"
                                 onclick={unlockAll}
                                 title="Unlock all results"
                             >
@@ -478,9 +478,9 @@
                                                 {/if}
                                             </button>
                                             <div class="text-xs font-bold {isLocked ? 'text-red-500/70' : 'text-neutral-500'} uppercase tracking-wider mb-2">{catResult.label}</div>
-                                            <div class="space-y-1">
+                                            <div class={catResult.results.length > 1 ? "grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1" : "space-y-1"}>
                                                 {#each catResult.results as res}
-                                                    <div class="text-xl md:text-2xl font-semibold text-neutral-100">
+                                                    <div class="text-xl md:text-2xl font-semibold text-neutral-100 min-w-0 break-words">
                                                         {#if res.includes('||')}
                                                             {@const parts = res.split('||')}
                                                             {parts[0]}
@@ -518,9 +518,9 @@
                                                 {/if}
                                             </button>
                                             <div class="text-xs font-bold {isLocked ? 'text-red-500/70' : 'text-neutral-500'} uppercase tracking-wider mb-2">{catResult.label}</div>
-                                            <div class="space-y-1">
+                                            <div class={catResult.results.length > 1 ? "grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1" : "space-y-1"}>
                                                 {#each catResult.results as res}
-                                                    <div class="text-xl md:text-2xl font-semibold text-neutral-100">
+                                                    <div class="text-xl md:text-2xl font-semibold text-neutral-100 min-w-0 break-words">
                                                         {#if res.includes('||')}
                                                             {@const parts = res.split('||')}
                                                             {parts[0]}
