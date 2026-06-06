@@ -17,10 +17,20 @@ A web-based tool built with SvelteKit to randomly generate event constraints for
 
 All randomiser data is stored in the `static/data/` directory. To add or modify options without altering the codebase, simply edit the respective CSV files:
 
-- `cars.csv` - Contains the list of cars, including makes, years/names, and classes.
-- `car-types.csv` - Defines specific car types and their broader categories.
+- `cars.csv` - Contains the list of cars, sourced automatically from the official Forza website.
+- `car_type_mapping.csv` - Maps specific car types to broader categories (e.g., "Hypercars" -> "Supercars").
 - `races.csv` - Contains all race events, specifying their primary Type (Road, Dirt, Drag, etc.) and Subtype (Circuit, Sprint).
-- **Standalone Categories** - Small, single-column CSVs (e.g., `weather.csv`, `season.csv`, `car_class.csv`, `countries.csv`, etc.). To add a new weather condition, just add it on a new line in `weather.csv`.
+- **Standalone Categories** - Small, single-column CSVs (e.g., `weather.csv`, `season.csv`, `car_class.csv`, `drivetrain.csv`, etc.). To add a new weather condition, just add it on a new line in `weather.csv`.
+
+## Data Synchronization
+
+The car list is automatically synced with the [Official Forza Horizon 6 Car List](https://forza.net/fh6cars). To refresh the data, run:
+
+```sh
+pnpm run update-cars
+```
+
+This will scrape the latest cars, updates `static/data/cars.csv`, and refreshes the data date displayed in the app.
 
 ## Developing
 
@@ -45,4 +55,4 @@ You can preview the production build with `pnpm run preview`.
 
 ## Credits
 
-Car Data is sourced from [Aeqnx's Forza Horizon 6 Spreadsheet](https://docs.google.com/spreadsheets/d/1pz_hNeBiBwLn-ya1zLRhzvnaYk3lLfg9izmbCI82mW4/).
+Car Data is automatically sourced from the [Official Forza Horizon 6 Car List](https://forza.net/fh6cars).
