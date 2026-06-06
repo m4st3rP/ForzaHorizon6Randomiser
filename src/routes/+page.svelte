@@ -77,13 +77,22 @@
         opts['track_subtype'] = [...new Set(races.map(r => r.Subtype).filter(Boolean))].sort();
 
         opts['car_type'] = [...new Set(cars.map(c => c['Car Type']).filter(Boolean))].sort();
-        // Fallback to carTypes categories if we can map them, but for now just use the types from cars.csv
-        const broaderCategories = new Set<string>();
+
+        const broaderCategoriesMap = new Map<string, Set<string>>();
         cars.forEach(c => {
             const mapping = carTypes.find(ct => ct.Car_Type === c['Car Type']);
-            if (mapping) broaderCategories.add(mapping.Category);
+            if (mapping) {
+                if (!broaderCategoriesMap.has(mapping.Category)) {
+                    broaderCategoriesMap.set(mapping.Category, new Set());
+                }
+                broaderCategoriesMap.get(mapping.Category)!.add(mapping.Car_Type);
+            }
         });
-        opts['broader_car_categories'] = [...broaderCategories].sort();
+
+        opts['broader_car_categories'] = Array.from(broaderCategoriesMap.keys()).sort().map(cat => {
+            const subTypes = Array.from(broaderCategoriesMap.get(cat)!).sort().join(', ');
+            return `${cat}||${subTypes}`;
+        });
 
         return opts;
     });
