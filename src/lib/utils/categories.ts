@@ -8,6 +8,12 @@ export const CATEGORIES: CategoryDefinition[] = [
         group: 'Car'
     },
     {
+        id: 'horizon_special',
+        label: 'Horizon Special',
+        type: 'dynamic',
+        group: 'Car'
+    },
+    {
         id: 'car_type',
         label: 'Type',
         type: 'dynamic',

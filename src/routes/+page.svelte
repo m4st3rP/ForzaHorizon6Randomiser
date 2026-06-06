@@ -113,7 +113,8 @@
             const simpleCategories = [
                 'car_class', 'stock_tuned', 'car_value', 'drivetrain',
                 'rarity', 'camera', 'laps', 'season', 'weather', 'time_of_day',
-                'horizon_play_type', 'horizon_track_type', 'horizon_class', 'horizon_drivetrain', 'horizon_collisions'
+                'horizon_play_type', 'horizon_track_type', 'horizon_class', 'horizon_drivetrain', 'horizon_collisions',
+                'horizon_special'
             ];
 
             await Promise.all(simpleCategories.map(async (catId) => {
