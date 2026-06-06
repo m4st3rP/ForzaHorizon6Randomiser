@@ -276,6 +276,20 @@
         });
     }
 
+    function applyPreset(categoryIds: string[]) {
+        settingsStore.update(s => {
+            const lockedResults = { ...s.lockedResults };
+            Object.keys(lockedResults).forEach(id => {
+                if (!categoryIds.includes(id)) delete lockedResults[id];
+            });
+            return {
+                ...s,
+                activeCategories: categoryIds,
+                lockedResults
+            };
+        });
+    }
+
 </script>
 
 <div class="min-h-screen bg-neutral-950 text-neutral-100 p-4 md:p-8 font-sans">
@@ -317,46 +331,76 @@
                         <div>
                             <div class="flex items-center justify-between mb-3">
                                 <h3 class="font-semibold text-neutral-400 text-sm uppercase tracking-wider mb-0">Active Categories</h3>
-                                <div class="flex gap-2">
+                                <div class="flex flex-wrap gap-2">
                                     <button 
                                         class="text-xs px-2 py-1 rounded border border-neutral-700 bg-neutral-900 text-neutral-400 hover:text-red-400 hover:border-red-500/50 transition-colors"
-                                        onclick={() => { settingsStore.update(s => ({ ...s, activeCategories: CATEGORIES.map(c => c.id) })); }}
+                                        onclick={() => applyPreset(CATEGORIES.map(c => c.id))}
                                         title="Select all categories"
                                     >
                                         All
                                     </button>
                                     <button 
                                         class="text-xs px-2 py-1 rounded border border-neutral-700 bg-neutral-900 text-neutral-400 hover:text-red-400 hover:border-red-500/50 transition-colors"
-                                        onclick={() => {
-                                            settingsStore.update(s => ({
-                                                ...s,
-                                                activeCategories: [],
-                                                lockedResults: {}
-                                            }));
-                                        }}
+                                        onclick={() => applyPreset([])}
                                         title="Select no categories"
                                     >
                                         None
                                     </button>
                                     <button 
                                         class="text-xs px-2 py-1 rounded border border-neutral-700 bg-neutral-900 text-neutral-400 hover:text-red-400 hover:border-red-500/50 transition-colors"
-                                        onclick={() => {
-                                            settingsStore.update(s => {
-                                                const defaults = ['car_class', 'car_type', 'tracktype', 'season', 'time_of_day', 'weather'];
-                                                const lockedResults = { ...s.lockedResults };
-                                                Object.keys(lockedResults).forEach(id => {
-                                                    if (!defaults.includes(id)) delete lockedResults[id];
-                                                });
-                                                return {
-                                                    ...s,
-                                                    activeCategories: defaults,
-                                                    lockedResults
-                                                };
-                                            });
-                                        }}
-                                        title="Reset to default categories"
+                                        onclick={() => applyPreset(['car_class', 'car_type', 'tracktype', 'season', 'time_of_day', 'weather'])}
+                                        title="Standard balanced selection"
                                     >
-                                        Reset
+                                        Default
+                                    </button>
+                                    <button
+                                        class="text-xs px-2 py-1 rounded border border-neutral-700 bg-neutral-900 text-neutral-400 hover:text-red-400 hover:border-red-500/50 transition-colors"
+                                        onclick={() => applyPreset(['track', 'tracktype', 'laps', 'car_class', 'car_type'])}
+                                        title="Focused on the track experience"
+                                    >
+                                        Racing
+                                    </button>
+                                    <button
+                                        class="text-xs px-2 py-1 rounded border border-neutral-700 bg-neutral-900 text-neutral-400 hover:text-red-400 hover:border-red-500/50 transition-colors"
+                                        onclick={() => applyPreset(['specific_car', 'countries', 'decades', 'season', 'time_of_day', 'weather'])}
+                                        title="Focused on car variety and atmosphere"
+                                    >
+                                        Cruising
+                                    </button>
+                                    <button
+                                        class="text-xs px-2 py-1 rounded border border-neutral-700 bg-neutral-900 text-neutral-400 hover:text-red-400 hover:border-red-500/50 transition-colors"
+                                        onclick={() => applyPreset(['horizon_play_type', 'horizon_track_type', 'horizon_class', 'horizon_collisions', 'horizon_special'])}
+                                        title="Focused on Horizon Play"
+                                    >
+                                        Online
+                                    </button>
+                                    <button
+                                        class="text-xs px-2 py-1 rounded border border-neutral-700 bg-neutral-900 text-neutral-400 hover:text-red-400 hover:border-red-500/50 transition-colors"
+                                        onclick={() => applyPreset(['car_class', 'stock_tuned', 'year', 'camera', 'laps', 'time_of_day', 'weather'])}
+                                        title="Focused on realistic details"
+                                    >
+                                        Authentic
+                                    </button>
+                                    <button
+                                        class="text-xs px-2 py-1 rounded border border-neutral-700 bg-neutral-900 text-neutral-400 hover:text-red-400 hover:border-red-500/50 transition-colors"
+                                        onclick={() => applyPreset(CATEGORIES.filter(c => c.group === 'Car').map(c => c.id))}
+                                        title="Only Car categories"
+                                    >
+                                        Cars
+                                    </button>
+                                    <button
+                                        class="text-xs px-2 py-1 rounded border border-neutral-700 bg-neutral-900 text-neutral-400 hover:text-red-400 hover:border-red-500/50 transition-colors"
+                                        onclick={() => applyPreset(CATEGORIES.filter(c => c.group === 'Track').map(c => c.id))}
+                                        title="Only Track categories"
+                                    >
+                                        Tracks
+                                    </button>
+                                    <button
+                                        class="text-xs px-2 py-1 rounded border border-neutral-700 bg-neutral-900 text-neutral-400 hover:text-red-400 hover:border-red-500/50 transition-colors"
+                                        onclick={() => applyPreset(CATEGORIES.filter(c => c.group === 'Horizon Play').map(c => c.id))}
+                                        title="Only Horizon Play categories"
+                                    >
+                                        Horizon
                                     </button>
                                 </div>
                             </div>
