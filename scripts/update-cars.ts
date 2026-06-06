@@ -37,9 +37,24 @@ async function updateCars() {
         fs.writeFileSync(outputPath, csv);
         console.log(`Saved to ${outputPath}`);
 
+        // Try to find the "Updated DD MMM YYYY" string in the page
+        const bodyText = document.body.textContent || '';
+        const dateMatch = bodyText.match(/Updated\s+(\d{1,2}\s+[A-Za-z]+\s+\d{4})/);
+        let displayDate = new Date().toISOString().split('T')[0];
+
+        if (dateMatch && dateMatch[1]) {
+            const parsedDate = new Date(dateMatch[1]);
+            if (!isNaN(parsedDate.getTime())) {
+                // Format as YYYY-MM-DD
+                displayDate = parsedDate.toISOString().split('T')[0];
+            } else {
+                displayDate = dateMatch[1];
+            }
+        }
+
         const datePath = path.join(process.cwd(), 'static/data/data_date.txt');
-        fs.writeFileSync(datePath, new Date().toISOString().split('T')[0]);
-        console.log(`Updated data date to ${new Date().toISOString().split('T')[0]}`);
+        fs.writeFileSync(datePath, displayDate);
+        console.log(`Updated data date to ${displayDate}`);
 
     } catch (error) {
         console.error('Error updating cars:', error);
