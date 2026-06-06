@@ -113,11 +113,12 @@ describe('Main Page Component', () => {
         }, { timeout: 8000 });
     });
 
-    it('handles select all/none/reset', async () => {
+    it('handles select all/none/default and other presets', async () => {
         render(Page);
         const allBtn = await screen.findByTitle('Select all categories', {}, { timeout: 8000 });
         const noneBtn = screen.getByTitle('Select no categories');
-        const resetBtn = screen.getByTitle('Reset to default categories');
+        const defaultBtn = screen.getByTitle('Standard balanced selection');
+        const racingBtn = screen.getByTitle('Focused on the track experience');
 
         await act(() => fireEvent.click(screen.getByText(/^Roll$/i)));
 
@@ -127,8 +128,13 @@ describe('Main Page Component', () => {
         await act(() => fireEvent.click(allBtn));
         expect(get(settingsStore).activeCategories.length).toBe(CATEGORIES.length);
 
-        await act(() => fireEvent.click(resetBtn));
+        await act(() => fireEvent.click(defaultBtn));
         expect(get(settingsStore).activeCategories).toContain('car_class');
+        expect(get(settingsStore).activeCategories).toContain('weather');
+
+        await act(() => fireEvent.click(racingBtn));
+        expect(get(settingsStore).activeCategories).toContain('track');
+        expect(get(settingsStore).activeCategories).not.toContain('weather');
     });
 
     it('handles Acquired via filtering', async () => {
