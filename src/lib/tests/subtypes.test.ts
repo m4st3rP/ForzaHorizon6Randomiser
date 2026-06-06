@@ -63,7 +63,8 @@ describe('Category Sub-types', () => {
                 expect(screen.getByText('Modern Sports Cars, Retro Sports Cars')).toBeTruthy();
             }
             if (supercarsResult) {
-                expect(screen.getByText('Retro Supercars')).toBeTruthy();
+                // In setupFetchMock, Supercars maps to Retro Supercars, Modern Supercars, Hypercars
+                expect(screen.getByText('Hypercars, Modern Supercars, Retro Supercars')).toBeTruthy();
             }
         }, { timeout: 8000 });
     });

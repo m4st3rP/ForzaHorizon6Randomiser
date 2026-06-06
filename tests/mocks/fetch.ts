@@ -14,7 +14,7 @@ export function setupFetchMock() {
       } else if (filename === 'races.csv') {
         content = readFileSync(join(process.cwd(), 'tests/fixtures/races.csv'), 'utf-8');
       } else if (filename === 'car_type_mapping.csv') {
-        content = 'Car_Type,Category\nModern Sports Cars,Sports Cars\nRetro Sports Cars,Sports Cars\nClassic Muscle,Muscle\nRetro Supercars,Supercars\n';
+        content = 'Car_Type,Category\nModern Sports Cars,Sports Cars\nRetro Sports Cars,Sports Cars\nClassic Muscle,Muscle\nRetro Supercars,Supercars\nModern Supercars,Supercars\nHypercars,Supercars\n';
       } else if (filename === 'track.csv') {
         content = 'Value\nTrack 1||Sub 1\nTrack 2||Sub 2\n';
       } else if (filename === 'horizon_play_type.csv') {
