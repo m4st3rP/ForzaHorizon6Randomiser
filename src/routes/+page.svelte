@@ -10,6 +10,7 @@
     let cars: Car[] = $state([]);
     let races: Race[] = $state([]);
     let carTypes: CarType[] = $state([]);
+    let dataDate: string = $state('');
     let loading = $state(true);
     let error: string | null = $state(null);
 
@@ -34,10 +35,10 @@
     // Base options from simple CSVs
     let baseOptions: Record<string, string[]> = $state({});
 
-    // Filtered cars based on Acquired via logic
+    // Filtered cars based on Collection logic
     let filteredCars = $derived(cars.filter(c => {
-        if (!c['Acquired via']) return true;
-        const methods = c['Acquired via'].split('/').map(s => s.trim()).filter(Boolean);
+        if (!c['Collection']) return true;
+        const methods = c['Collection'].split(',').map(s => s.trim()).filter(Boolean);
         if (methods.length === 0) return true;
         return methods.some(m => !($settingsStore.disabledAcquiredVia || []).includes(m));
     }));
@@ -58,17 +59,32 @@
 
         opts['decades'] = [...new Set(allYears.map(y => `${Math.floor(y / 10) * 10}s`))].sort();
 
+        opts['car_class'] = [...new Set(filteredCars.map(c => c['Car Class']).filter(Boolean))].sort();
+        opts['countries'] = [...new Set(filteredCars.map(c => c.Country).filter(Boolean))].sort();
+
         opts['specific_car'] = filteredCars.map(c => {
-            const acquired = c['Acquired via'] ? c['Acquired via'].trim() : '';
-            return acquired ? `${c['Car Name']}||Acquired via: ${acquired}` : c['Car Name'];
+            const acquired = c['Collection'] ? c['Collection'].trim() : '';
+            const addons = c['Add-Ons'] ? c['Add-Ons'].trim() : '';
+            let info = '';
+            if (acquired && addons) info = `Collection: ${acquired} | Add-Ons: ${addons}`;
+            else if (acquired) info = `Collection: ${acquired}`;
+            else if (addons) info = `Add-Ons: ${addons}`;
+
+            return info ? `${c['Car Name']}||${info}` : c['Car Name'];
         });
 
         opts['track'] = races.map(r => r.Name);
         opts['tracktype'] = [...new Set(races.map(r => r.Type).filter(Boolean))].sort();
         opts['track_subtype'] = [...new Set(races.map(r => r.Subtype).filter(Boolean))].sort();
 
-        opts['car_type'] = [...new Set(carTypes.map(c => c.Car_Type).filter(Boolean))].sort();
-        opts['broader_car_categories'] = [...new Set(carTypes.map(c => c.Category).filter(Boolean))].sort();
+        opts['car_type'] = [...new Set(cars.map(c => c['Car Type']).filter(Boolean))].sort();
+        // Fallback to carTypes categories if we can map them, but for now just use the types from cars.csv
+        const broaderCategories = new Set<string>();
+        cars.forEach(c => {
+            const mapping = carTypes.find(ct => ct.Car_Type === c['Car Type']);
+            if (mapping) broaderCategories.add(mapping.Category);
+        });
+        opts['broader_car_categories'] = [...broaderCategories].sort();
 
         return opts;
     });
@@ -97,11 +113,11 @@
                 baseOptions[catId] = data.map(row => row.Value).filter(Boolean);
             }));
 
-            // Extract all possible Acquired via methods
+            // Extract all possible Collection methods
             const methodsSet = new Set<string>();
             cars.forEach(c => {
-                if (c['Acquired via']) {
-                    const methods = c['Acquired via'].split('/').map(s => s.trim()).filter(Boolean);
+                if (c['Collection']) {
+                    const methods = c['Collection'].split(',').map(s => s.trim()).filter(Boolean);
                     methods.forEach(m => methodsSet.add(m));
                 }
             });
@@ -111,6 +127,13 @@
             if (!$settingsStore.activeCategories || $settingsStore.activeCategories.length === 0) {
                 // Enable some typical defaults
                 $settingsStore.activeCategories = ['car_class', 'car_type', 'tracktype', 'season', 'time_of_day', 'weather'];
+            }
+
+            try {
+                const dateRes = await fetch(`${base}/data/data_date.txt`);
+                if (dateRes.ok) dataDate = await dateRes.text();
+            } catch (e) {
+                console.error('Failed to load data date', e);
             }
 
             loading = false;
@@ -599,10 +622,10 @@
 
         <footer class="text-center pt-12 pb-4 text-neutral-500 text-sm space-y-2">
             <div>
-                Car Data thanks to <a href="https://docs.google.com/spreadsheets/d/1pz_hNeBiBwLn-ya1zLRhzvnaYk3lLfg9izmbCI82mW4/" target="_blank" rel="noopener noreferrer" class="text-red-400 hover:text-red-300 transition-colors">Aeqnx and their Spreadsheet</a>.
+                Car Data sourced from <a href="https://forza.net/fh6cars" target="_blank" rel="noopener noreferrer" class="text-red-400 hover:text-red-300 transition-colors">Official Forza FH6 Car List</a>.
             </div>
             <div>
-                Data Date: 2026-05-30
+                Data Date: {dataDate || '2026-06-05'}
             </div>
         </footer>
     </div>

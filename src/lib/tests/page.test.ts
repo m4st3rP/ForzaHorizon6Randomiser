@@ -198,7 +198,7 @@ describe('Main Page Component', () => {
         await act(() => fireEvent.click(rollButton));
 
         await waitFor(() => {
-            expect(screen.getByText(/Acquired via:/i)).toBeTruthy();
+            expect(screen.getByText(/Collection:/i)).toBeTruthy();
         }, { timeout: 8000 });
     });
 
