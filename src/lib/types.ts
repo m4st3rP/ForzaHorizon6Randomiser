@@ -1,12 +1,11 @@
 export interface Car {
     Make: string;
     "Car Name": string;
-    "FH6 Class": string;
-    "FH6 PI": string;
-    "FH5 Class": string;
-    "Class Change?": string;
-    "New?": string;
-    "Acquired via": string;
+    "Car Type": string;
+    "Car Class": string;
+    Country: string;
+    Collection: string;
+    "Add-Ons": string;
 }
 
 export interface Race {
