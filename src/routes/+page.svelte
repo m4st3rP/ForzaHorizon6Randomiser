@@ -59,7 +59,6 @@
 
         opts['decades'] = [...new Set(allYears.map(y => `${Math.floor(y / 10) * 10}s`))].sort();
 
-        opts['car_class'] = [...new Set(filteredCars.map(c => c['Car Class']).filter(Boolean))].sort();
         opts['countries'] = [...new Set(filteredCars.map(c => c.Country).filter(Boolean))].sort();
 
         opts['specific_car'] = filteredCars.map(c => {
@@ -95,7 +94,7 @@
             const [loadedCars, loadedRaces, loadedCarTypes] = await Promise.all([
                 loadCsv<Car>(`${base}/data/cars.csv`),
                 loadCsv<Race>(`${base}/data/races.csv`),
-                loadCsv<CarType>(`${base}/data/car-types.csv`),
+                loadCsv<CarType>(`${base}/data/car_type_mapping.csv`),
             ]);
             cars = loadedCars;
             races = loadedRaces;
@@ -103,7 +102,7 @@
 
             // Load the small standalone option lists
             const simpleCategories = [
-                'car_class', 'countries', 'stock_tuned', 'car_value', 'drivetrain', 
+                'car_class', 'stock_tuned', 'car_value', 'drivetrain',
                 'rarity', 'camera', 'laps', 'season', 'weather', 'time_of_day',
                 'horizon_play_type', 'horizon_track_type', 'horizon_class', 'horizon_drivetrain', 'horizon_collisions'
             ];
