@@ -135,6 +135,10 @@ describe('Main Page Component', () => {
         await act(() => fireEvent.click(racingBtn));
         expect(get(settingsStore).activeCategories).toContain('track');
         expect(get(settingsStore).activeCategories).not.toContain('weather');
+
+        const playBtn = screen.getByTitle('Only Horizon Play categories');
+        await act(() => fireEvent.click(playBtn));
+        expect(get(settingsStore).activeCategories).toContain('horizon_play_type');
     });
 
     it('handles Acquired via filtering', async () => {
