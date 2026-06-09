@@ -670,7 +670,10 @@
 
         <footer class="text-center pt-12 pb-4 text-neutral-500 text-sm space-y-2">
             <div>
-                Car Data sourced from <a href="https://forza.net/fh6cars" target="_blank" rel="noopener noreferrer" class="text-red-400 hover:text-red-300 transition-colors">Official Forza FH6 Car List</a>.
+                Car data sourced from the <a href="https://forza.net/fh6cars" target="_blank" rel="noopener noreferrer" class="text-red-400 hover:text-red-300 transition-colors">Official Forza FH6 Car List</a>.
+            </div>
+            <div>
+                If the car data is out of date, please <a href="https://github.com/m4st3rp/ForzaHorizon6Randomiser/issues/new" target="_blank" rel="noopener noreferrer" class="text-red-400 hover:text-red-300 transition-colors">create an issue on GitHub</a>.
             </div>
             <div>
                 Data Date: {dataDate || '2026-06-05'}
