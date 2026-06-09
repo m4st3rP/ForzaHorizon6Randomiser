@@ -8,7 +8,7 @@
 
 [**Click here to use the Randomiser**](https://m4st3rp.github.io/ForzaHorizon6Randomiser/)
 
-A professional, web-based tool built with SvelteKit to randomly generate event constraints for Forza Horizon 6. Whether you are looking for a unique racing challenge or simply want variety in your cruising, this tool provides thousands of possible combinations for your next session.
+A web-based tool built with SvelteKit to randomly generate event constraints for Forza Horizon 6. Whether you are looking for a unique racing challenge or simply want variety in your cruising, this tool provides endless possible combinations for your next session.
 
 ## Features
 
@@ -51,7 +51,7 @@ This project is built using modern web technologies to ensure a fast and respons
 
 ### Automated Car Data Updates
 
-We no longer rely on manual data entry for the car list. Instead, the application pulls data directly from the **Official Forza Horizon 6 Car List**.
+The application pulls car data directly from the **Official Forza Horizon 6 Car List**.
 
 To refresh the car data with the latest additions from the official website, run:
 
