@@ -5,10 +5,11 @@
     import { settingsStore } from '$lib/stores/randomizer';
     import { mulberry32, seedToNumber, generateSeed } from '$lib/utils/selector';
     import { CATEGORIES } from '$lib/utils/categories';
-    import type { Car, Race, CategoryResult, CarType, OptionData } from '$lib/types';
+    import type { Car, Race, PrStunt, CategoryResult, CarType, OptionData } from '$lib/types';
 
     let cars: Car[] = $state([]);
     let races: Race[] = $state([]);
+    let prStunts: PrStunt[] = $state([]);
     let carTypes: CarType[] = $state([]);
     let dataDate: string = $state('');
     let loading = $state(true);
@@ -76,6 +77,9 @@
         opts['tracktype'] = [...new Set(races.map(r => r.Type).filter(Boolean))].sort();
         opts['track_subtype'] = [...new Set(races.map(r => r.Subtype).filter(Boolean))].sort();
 
+        opts['pr_stunt_name'] = prStunts.map(s => `${s.Name}||${s.Type}`);
+        opts['pr_stunt_type'] = [...new Set(prStunts.map(s => s.Type).filter(Boolean))].sort();
+
         opts['car_type'] = [...new Set(cars.map(c => c['Car Type']).filter(Boolean))].sort();
 
         const broaderCategoriesMap = new Map<string, Set<string>>();
@@ -100,13 +104,15 @@
     onMount(async () => {
         try {
             // First load the main datasets
-            const [loadedCars, loadedRaces, loadedCarTypes] = await Promise.all([
+            const [loadedCars, loadedRaces, loadedPrStunts, loadedCarTypes] = await Promise.all([
                 loadCsv<Car>(`${base}/data/cars.csv`),
                 loadCsv<Race>(`${base}/data/races.csv`),
+                loadCsv<PrStunt>(`${base}/data/pr_stunts.csv`),
                 loadCsv<CarType>(`${base}/data/car_type_mapping.csv`),
             ]);
             cars = loadedCars;
             races = loadedRaces;
+            prStunts = loadedPrStunts;
             carTypes = loadedCarTypes;
 
             // Load the small standalone option lists
@@ -398,6 +404,13 @@
                                 >
                                     Play
                                 </button>
+                                <button
+                                    class="text-xs px-3 py-1.5 rounded border border-neutral-700 bg-neutral-900 text-neutral-400 hover:text-red-400 hover:border-red-500/50 transition-colors"
+                                    onclick={() => applyPreset(['car_class', 'car_type', 'pr_stunt_name'])}
+                                    title="PR Stunts focused"
+                                >
+                                    Stunts
+                                </button>
                             </div>
 
                             <h4 class="font-semibold text-neutral-400 text-xs uppercase tracking-wider mb-2 mt-4">Car Choices</h4>
@@ -405,6 +418,21 @@
                                 {#each CATEGORIES.filter(c => c.group === 'Car') as cat}
                                     {@const isActive = $settingsStore.activeCategories.includes(cat.id)}
                                     <button 
+                                        class="px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 border {isActive ? 'bg-red-500/20 border-red-500/50 text-red-400' : 'bg-neutral-950 border-neutral-800 text-neutral-500 hover:border-neutral-600 hover:text-neutral-300'}"
+                                        onclick={() => toggleCategory(cat.id)}
+                                    >
+                                        {cat.label}
+                                    </button>
+                                {/each}
+                            </div>
+
+                            <div class="w-full h-px bg-neutral-800 my-4"></div>
+
+                            <h4 class="font-semibold text-neutral-400 text-xs uppercase tracking-wider mb-2">PR Stunts Choices</h4>
+                            <div class="flex flex-wrap gap-2">
+                                {#each CATEGORIES.filter(c => c.group === 'PR Stunts') as cat}
+                                    {@const isActive = $settingsStore.activeCategories.includes(cat.id)}
+                                    <button
                                         class="px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 border {isActive ? 'bg-red-500/20 border-red-500/50 text-red-400' : 'bg-neutral-950 border-neutral-800 text-neutral-500 hover:border-neutral-600 hover:text-neutral-300'}"
                                         onclick={() => toggleCategory(cat.id)}
                                     >
@@ -520,6 +548,7 @@
                         {@const carResults = results.filter(r => r.group === 'Car')}
                         {@const trackResults = results.filter(r => r.group === 'Track')}
                         {@const horizonResults = results.filter(r => r.group === 'Horizon Play')}
+                        {@const prStuntResults = results.filter(r => r.group === 'PR Stunts')}
                         <div class="bg-neutral-900 p-6 md:p-8 rounded-3xl border border-neutral-800 shadow-2xl relative overflow-hidden">
                             <div class="absolute top-0 left-0 w-full h-1 bg-linear-to-r from-red-400 via-red-500 to-red-600"></div>
                             
@@ -579,7 +608,7 @@
                                 </div>
                             {/if}
                             
-                            {#if carResults.length > 0 && trackResults.length > 0}
+                            {#if trackResults.length > 0 && carResults.length > 0}
                                 <div class="w-full h-px bg-neutral-800 my-8"></div>
                             {/if}
                             
@@ -619,7 +648,7 @@
                                 </div>
                             {/if}
 
-                            {#if trackResults.length > 0 && horizonResults.length > 0}
+                            {#if horizonResults.length > 0 && (carResults.length > 0 || trackResults.length > 0)}
                                 <div class="w-full h-px bg-neutral-800 my-8"></div>
                             {/if}
 
@@ -627,6 +656,46 @@
                                 <h4 class="text-lg font-bold text-neutral-300 mb-4">Horizon Play</h4>
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     {#each horizonResults as catResult}
+                                        {@const isLocked = !!$settingsStore.lockedResults[catResult.categoryId]}
+                                        <div class="bg-neutral-950 p-5 rounded-2xl border {isLocked ? 'border-red-500/50' : 'border-neutral-800'} flex flex-col justify-center relative group">
+                                            <button
+                                                class="absolute top-3 right-3 p-1.5 rounded-lg transition-colors {isLocked ? 'text-red-500 bg-red-500/10' : 'text-neutral-600 hover:text-neutral-400 bg-neutral-900 opacity-0 group-hover:opacity-100'}"
+                                                onclick={() => toggleLock(catResult.categoryId)}
+                                                title={isLocked ? "Unlock Category" : "Lock Category"}
+                                            >
+                                                {#if isLocked}
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                                                {:else}
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 9.9-1"></path></svg>
+                                                {/if}
+                                            </button>
+                                            <div class="text-xs font-bold {isLocked ? 'text-red-500/70' : 'text-neutral-500'} uppercase tracking-wider mb-2">{catResult.label}</div>
+                                            <div class={catResult.results.length > 1 ? "grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1" : "space-y-1"}>
+                                                {#each catResult.results as res}
+                                                    <div class="text-xl md:text-2xl font-semibold text-neutral-100 min-w-0 break-words">
+                                                        {#if res && res.includes('||')}
+                                                            {@const parts = res.split('||')}
+                                                            {parts[0]}
+                                                            <span class="block text-sm md:text-base font-normal text-neutral-400 mt-1">{parts[1]}</span>
+                                                        {:else}
+                                                            {res || '---'}
+                                                        {/if}
+                                                    </div>
+                                                {/each}
+                                            </div>
+                                        </div>
+                                    {/each}
+                                </div>
+                            {/if}
+
+                            {#if prStuntResults.length > 0 && (carResults.length > 0 || trackResults.length > 0 || horizonResults.length > 0)}
+                                <div class="w-full h-px bg-neutral-800 my-8"></div>
+                            {/if}
+
+                            {#if prStuntResults.length > 0}
+                                <h4 class="text-lg font-bold text-neutral-300 mb-4">PR Stunts</h4>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    {#each prStuntResults as catResult}
                                         {@const isLocked = !!$settingsStore.lockedResults[catResult.categoryId]}
                                         <div class="bg-neutral-950 p-5 rounded-2xl border {isLocked ? 'border-red-500/50' : 'border-neutral-800'} flex flex-col justify-center relative group">
                                             <button

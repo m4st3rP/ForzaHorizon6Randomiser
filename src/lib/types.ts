@@ -14,6 +14,11 @@ export interface Race {
     Subtype: string;
 }
 
+export interface PrStunt {
+    Name: string;
+    Type: string;
+}
+
 export interface CarType {
     Car_Type: string;
     Category: string;
@@ -27,14 +32,14 @@ export interface CategoryDefinition {
     id: string;
     label: string;
     type: 'dynamic';
-    group: 'Car' | 'Track' | 'Horizon Play';
+    group: 'Car' | 'Track' | 'Horizon Play' | 'PR Stunts';
 }
 
 export interface CategoryResult {
     categoryId: string;
     label: string;
     results: string[];
-    group: 'Car' | 'Track' | 'Horizon Play';
+    group: 'Car' | 'Track' | 'Horizon Play' | 'PR Stunts';
 }
 
 export interface RandomizerSettings {
