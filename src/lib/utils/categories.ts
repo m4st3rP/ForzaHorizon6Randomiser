@@ -156,5 +156,17 @@ export const CATEGORIES: CategoryDefinition[] = [
         label: 'Collisions',
         type: 'dynamic',
         group: 'Horizon Play'
+    },
+    {
+        id: 'pr_stunt_name',
+        label: 'Stunt',
+        type: 'dynamic',
+        group: 'PR Stunts'
+    },
+    {
+        id: 'pr_stunt_type',
+        label: 'Type',
+        type: 'dynamic',
+        group: 'PR Stunts'
     }
 ];
