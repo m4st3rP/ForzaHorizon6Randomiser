@@ -428,26 +428,11 @@
 
                             <div class="w-full h-px bg-neutral-800 my-4"></div>
 
-                            <h4 class="font-semibold text-neutral-400 text-xs uppercase tracking-wider mb-2">PR Stunts Choices</h4>
-                            <div class="flex flex-wrap gap-2">
-                                {#each CATEGORIES.filter(c => c.group === 'PR Stunts') as cat}
-                                    {@const isActive = $settingsStore.activeCategories.includes(cat.id)}
-                                    <button
-                                        class="px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 border {isActive ? 'bg-red-500/20 border-red-500/50 text-red-400' : 'bg-neutral-950 border-neutral-800 text-neutral-500 hover:border-neutral-600 hover:text-neutral-300'}"
-                                        onclick={() => toggleCategory(cat.id)}
-                                    >
-                                        {cat.label}
-                                    </button>
-                                {/each}
-                            </div>
-                            
-                            <div class="w-full h-px bg-neutral-800 my-4"></div>
-                            
                             <h4 class="font-semibold text-neutral-400 text-xs uppercase tracking-wider mb-2">Track Choices</h4>
                             <div class="flex flex-wrap gap-2">
                                 {#each CATEGORIES.filter(c => c.group === 'Track') as cat}
                                     {@const isActive = $settingsStore.activeCategories.includes(cat.id)}
-                                    <button 
+                                    <button
                                         class="px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 border {isActive ? 'bg-red-500/20 border-red-500/50 text-red-400' : 'bg-neutral-950 border-neutral-800 text-neutral-500 hover:border-neutral-600 hover:text-neutral-300'}"
                                         onclick={() => toggleCategory(cat.id)}
                                     >
@@ -461,6 +446,21 @@
                             <h4 class="font-semibold text-neutral-400 text-xs uppercase tracking-wider mb-2">Horizon Play Choices</h4>
                             <div class="flex flex-wrap gap-2">
                                 {#each CATEGORIES.filter(c => c.group === 'Horizon Play') as cat}
+                                    {@const isActive = $settingsStore.activeCategories.includes(cat.id)}
+                                    <button
+                                        class="px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 border {isActive ? 'bg-red-500/20 border-red-500/50 text-red-400' : 'bg-neutral-950 border-neutral-800 text-neutral-500 hover:border-neutral-600 hover:text-neutral-300'}"
+                                        onclick={() => toggleCategory(cat.id)}
+                                    >
+                                        {cat.label}
+                                    </button>
+                                {/each}
+                            </div>
+
+                            <div class="w-full h-px bg-neutral-800 my-4"></div>
+
+                            <h4 class="font-semibold text-neutral-400 text-xs uppercase tracking-wider mb-2">PR Stunts Choices</h4>
+                            <div class="flex flex-wrap gap-2">
+                                {#each CATEGORIES.filter(c => c.group === 'PR Stunts') as cat}
                                     {@const isActive = $settingsStore.activeCategories.includes(cat.id)}
                                     <button
                                         class="px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 border {isActive ? 'bg-red-500/20 border-red-500/50 text-red-400' : 'bg-neutral-950 border-neutral-800 text-neutral-500 hover:border-neutral-600 hover:text-neutral-300'}"
